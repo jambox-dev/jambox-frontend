@@ -1,0 +1,18 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './login/login.component';
+import { TwoFactorAuthComponent } from './two-factor-auth/two-factor-auth.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
+const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: '2fa', component: TwoFactorAuthComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class AdminRoutingModule { }

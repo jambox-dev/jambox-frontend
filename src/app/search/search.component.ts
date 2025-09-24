@@ -1,0 +1,79 @@
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { SearchResultsComponent } from '../search-results/search-results.component';
+import { MockMusicService, Song } from '../core/services/mock-music.service';
+import { NotificationService } from '../core/services/notification.service';
+import { AutoplayService } from '../core/services/autoplay.service';
+
+@Component({
+  selector: 'app-search',
+  standalone: true,
+  imports: [CommonModule, FormsModule, SearchResultsComponent],
+  templateUrl: './search.component.html',
+  styleUrl: './search.component.css'
+})
+export class SearchComponent {
+  private service = inject(MockMusicService);
+  private notifications = inject(NotificationService);
+  private autoplayService = inject(AutoplayService);
+
+  query = '';
+  loading = false;
+  lastAddedSongId: string | null = null;
+
+  onQueryChange(value: string) {
+    this.query = value;
+    if (!this.query.trim()) {
+      this.clearResults();
+      return;
+    }
+    this.performSearch();
+  }
+
+  private clearResults() {
+    this.service.searchSongs('').subscribe();
+    this.query = this.query.trim();
+  }
+
+  performSearch() {
+    this.loading = true;
+    this.service.searchSongs(this.query).subscribe({
+      next: () => {
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.notifications.error('Search failed.');
+      }
+    });
+  }
+
+  handleAdd(song: Song) {
+    try {
+      const autoplay = this.autoplayService.isEnabled();
+      this.service.addToQueue(song);
+      this.lastAddedSongId = song.id;
+
+      if (autoplay) {
+        const pos = this.service.getSongPosition(song.id);
+        this.notifications.success(
+          pos
+            ? `Song added. Position in queue: ${pos}.`
+            : 'Song added to queue.'
+        );
+      } else {
+        this.notifications.success('Song added to queue. Waiting for approval.');
+      }
+    } catch {
+      this.notifications.error('Could not add song.');
+    }
+  }
+
+  // Clear search input via X button
+  clearQuery() {
+    this.query = '';
+    this.service.searchSongs('').subscribe();
+    this.notifications.info('Search cleared', 2500);
+  }
+}

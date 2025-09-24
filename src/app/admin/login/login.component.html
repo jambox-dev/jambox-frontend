@@ -1,0 +1,63 @@
+<div class="min-h-screen bg-gray-100 flex flex-col">
+  <div class="flex-grow flex items-center justify-center px-4 py-10">
+    <div class="w-full max-w-md p-6 sm:p-8 space-y-6 bg-white rounded-xl shadow-md border border-gray-200">
+      <h2 class="text-2xl sm:text-3xl font-bold text-center text-green-800 leading-tight">
+        Jambox Admin
+      </h2>
+
+      <form class="space-y-5 sm:space-y-6" (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+        <div class="space-y-4">
+          <div>
+            <label for="username" class="block text-xs sm:text-sm font-medium text-gray-700 tracking-wide">
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              [(ngModel)]="username"
+              class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              required
+              autocomplete="username"
+            />
+          </div>
+          <div>
+            <label for="password" class="block text-xs sm:text-sm font-medium text-gray-700 tracking-wide">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              [(ngModel)]="password"
+              class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+        </div>
+
+        <!-- Error message removed; now handled via NotificationService toasts -->
+
+        <div>
+          <button
+            type="submit"
+            [disabled]="loading"
+            class="w-full px-4 py-2.5 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
+          >
+            <span *ngIf="!loading">Login</span>
+            <span *ngIf="loading" class="flex items-center gap-2">
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+                </path>
+              </svg>
+              <span class="text-sm">Processing</span>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
