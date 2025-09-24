@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface Song {
   id: string;
@@ -87,11 +88,26 @@ export class MockMusicService {
     );
   }
 
-  addToQueue(song: Song): void {
-    const current = this.queueSubject.getValue();
-    if (!current.find(s => s.id === song.id)) {
-      this.queueSubject.next([...current, song]);
+  addToQueue(song: Song): boolean {
+    // Validate song object
+    if (!song || !song.id || !song.title || !song.artist) {
+      throw new Error('Invalid song object');
     }
+
+    const current = this.queueSubject.getValue();
+    
+    // Check if song is already in queue
+    if (current.find(s => s.id === song.id)) {
+      throw new Error('Song already in queue');
+    }
+    
+    // Check queue size limit
+    if (current.length >= environment.limits.maxQueueSize) {
+      throw new Error(`Queue is full. Maximum ${environment.limits.maxQueueSize} songs allowed.`);
+    }
+
+    this.queueSubject.next([...current, song]);
+    return true;
   }
 
   removeFromQueue(id: string): void {

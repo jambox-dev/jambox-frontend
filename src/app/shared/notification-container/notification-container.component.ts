@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService, Notification } from '../../core/services/notification.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-notification-container',
@@ -78,16 +79,24 @@ import { NotificationService, Notification } from '../../core/services/notificat
     }
   `]
 })
-export class NotificationContainerComponent {
+export class NotificationContainerComponent implements OnDestroy {
   private notificationService = inject(NotificationService);
+  private subscription = new Subscription();
 
   notifications = () => this._notifications;
   private _notifications: Notification[] = [];
 
   constructor() {
-    this.notificationService.notifications$.subscribe(list => {
-      this._notifications = list;
-    });
+    // Properly manage subscription to prevent memory leaks
+    this.subscription.add(
+      this.notificationService.notifications$.subscribe(list => {
+        this._notifications = list;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   trackById(_: number, n: Notification) { return n.id; }

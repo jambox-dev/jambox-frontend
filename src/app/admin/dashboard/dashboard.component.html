@@ -31,42 +31,54 @@
       <span>Songs are auto-accepted. Review buttons are hidden.</span>
     </div>
 
+    <!-- Queue status message -->
+    <div *ngIf="queue.length === 0" class="text-center py-8 text-gray-500">
+      <p>No songs in queue. Users can add songs from the search page.</p>
+    </div>
+
     <div class="space-y-4">
-      <!-- Placeholder for song queue -->
+      <!-- Actual song queue -->
       <div
-        *ngFor="let song of [1, 2, 3, 4, 5]"
+        *ngFor="let song of queue; trackBy: trackBySongId"
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg"
       >
         <div class="flex items-start sm:items-center gap-4 flex-1 min-w-0">
           <img
             class="w-14 h-14 sm:w-16 sm:h-16 rounded-md object-cover flex-shrink-0"
-            src="https://placehold.co/64x64/a7f3d0/166534?text=Song"
-            alt="Album Art"
+            [src]="song.thumbnailUrl || 'https://placehold.co/64x64/a7f3d0/166534?text=' + song.id"
+            [alt]="song.title + ' album art'"
           >
           <div class="space-y-1 min-w-0">
             <h3 class="text-base sm:text-lg font-semibold text-gray-900 leading-snug break-words">
-              Beispielinterpret - BeispielTitel {{ song }}
+              {{ song.title }}
             </h3>
             <div class="flex items-center gap-2">
-              <p class="text-gray-600 text-sm sm:text-base truncate sm:whitespace-normal">Krassi - Alge</p>
+              <p class="text-gray-600 text-sm sm:text-base truncate sm:whitespace-normal">
+                {{ song.artist }}<span *ngIf="song.album"> - {{ song.album }}</span>
+              </p>
               <span *ngIf="autoplay" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">
-                Auto
+                Auto-Accepted
               </span>
             </div>
           </div>
         </div>
 
-        <!-- Action buttons only if autoplay is off -->
-        <div *ngIf="!autoplay" class="flex flex-row sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+        <!-- Action buttons -->
+        <div class="flex flex-row sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
           <button
+            *ngIf="!autoplay"
+            (click)="acceptSong(song)"
             class="w-full sm:w-auto px-4 py-2 font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 text-sm sm:text-base transition"
+            [attr.aria-label]="'Accept ' + song.title"
           >
             Accept
           </button>
-            <button
+          <button
+            (click)="remove(song)"
             class="w-full sm:w-auto px-4 py-2 font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 text-sm sm:text-base transition"
+            [attr.aria-label]="'Remove ' + song.title + ' from queue'"
           >
-            Decline
+            {{ autoplay ? 'Remove' : 'Decline' }}
           </button>
         </div>
       </div>

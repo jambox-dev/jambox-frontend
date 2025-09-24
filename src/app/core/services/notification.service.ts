@@ -22,7 +22,8 @@ export class NotificationService {
    * Push a notification (success/info/error). Auto-dismiss after duration.
    */
   push(type: NotificationKind, message: string, duration = 4000) {
-    const id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+    // Use crypto.randomUUID if available, otherwise generate a secure fallback
+    const id = this.generateSecureId();
     const notification: Notification = {
       id,
       type,
@@ -34,6 +35,28 @@ export class NotificationService {
     this.notificationsSubject.next([...current, notification]);
 
     setTimeout(() => this.dismiss(id), duration);
+  }
+
+  /**
+   * Generate a cryptographically secure ID
+   */
+  private generateSecureId(): string {
+    // Use crypto.randomUUID if available (modern browsers)
+    if (crypto && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    
+    // Fallback using crypto.getRandomValues for better security
+    if (crypto && crypto.getRandomValues) {
+      const array = new Uint8Array(16);
+      crypto.getRandomValues(array);
+      return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+    
+    // Final fallback for very old browsers (with timestamp to avoid collisions)
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).slice(2);
+    return `${timestamp}-${random}`;
   }
 
   success(message: string, duration?: number) {
