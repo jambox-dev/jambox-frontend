@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService, Notification } from '../../core/services/notification.service';
 
@@ -7,16 +7,18 @@ import { NotificationService, Notification } from '../../core/services/notificat
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="fixed inset-x-0 bottom-4 z-50 flex flex-col items-center px-4 pointer-events-none">
+    <div class="fixed inset-x-0 bottom-4 z-50 flex flex-col items-center px-4 pointer-events-none"
+         aria-live="polite"
+         aria-relevant="additions text">
       <div *ngFor="let n of notifications(); trackBy: trackById"
-           class="w-full max-w-md mb-3 last:mb-0 pointer-events-auto select-none
+           class="toast-item w-full max-w-md mb-3 last:mb-0 pointer-events-auto select-none
                   border shadow-lg rounded-xl px-5 py-3 flex items-start gap-3
                   bg-white/95 backdrop-blur relative overflow-hidden
                   animate-[fadeIn_150ms_ease-out]"
            [ngClass]="typeClasses(n.type)"
            [attr.data-type]="n.type"
-           role="status"
-           aria-live="polite">
+           [attr.role]="n.type === 'error' ? 'alert' : 'status'"
+           [attr.aria-live]="n.type === 'error' ? 'assertive' : 'polite'">
         <!-- Accent bar -->
         <span class="absolute left-0 top-0 h-full w-1"
               [ngClass]="accentClasses(n.type)"></span>
@@ -56,25 +58,32 @@ import { NotificationService, Notification } from '../../core/services/notificat
 
         <!-- Close button -->
         <button type="button"
-                class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition"
+                class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 rounded"
                 [attr.aria-label]="'Dismiss notification'"
                 (click)="dismiss(n.id)">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
                viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 
-                  1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 
-                  1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414
+                  1.414L11.414 10l4.293 4.293a1 1 0 01-1.414
+                  1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293
                   5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
           </svg>
         </button>
       </div>
+      <div class="sr-only" aria-live="polite">Press Escape to dismiss latest notification.</div>
     </div>
   `,
   styles: [`
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px) scale(.98); }
       to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .toast-item {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   `]
 })
@@ -88,6 +97,11 @@ export class NotificationContainerComponent {
     this.notificationService.notifications$.subscribe(list => {
       this._notifications = list;
     });
+  }
+
+  @HostListener('window:keydown.escape')
+  onEscape() {
+    this.notificationService.dismissLatest();
   }
 
   trackById(_: number, n: Notification) { return n.id; }

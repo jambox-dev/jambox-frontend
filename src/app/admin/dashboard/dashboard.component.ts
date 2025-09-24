@@ -16,6 +16,9 @@ export class DashboardComponent {
   private notifications = inject(NotificationService);
   private autoplayService = inject(AutoplayService);
 
+  // Live region announcement for accessibility
+  ariaAnnouncement = '';
+
   get queue(): Song[] {
     let snapshot: Song[] = [];
     const sub = this.service.queue$.subscribe((r: Song[]) => (snapshot = r));
@@ -29,11 +32,12 @@ export class DashboardComponent {
 
   toggleAutoplay() {
     const enabled = this.autoplayService.toggle();
-    this.notifications.info(
-      enabled
-        ? 'Autoplay enabled: songs auto-accepted.'
-        : 'Autoplay disabled: review required.'
-    );
+    const msg = enabled
+      ? 'Autoplay enabled: songs auto-accepted.'
+      : 'Autoplay disabled: review required.';
+    this.notifications.info(msg);
+    // Update polite live region
+    this.ariaAnnouncement = msg;
   }
 
   remove(song: Song) {

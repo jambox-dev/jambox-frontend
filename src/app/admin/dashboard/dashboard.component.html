@@ -1,4 +1,4 @@
-<div class="max-w-4xl mx-auto px-4 sm:px-6">
+<div class="app-main max-w-4xl mx-auto px-4 sm:px-6" role="main" tabindex="-1">
   <h1 class="text-3xl sm:text-4xl font-bold text-center text-green-800 mb-6 sm:mb-8">Jambox Admin</h1>
 
   <!-- Song Queue -->
@@ -15,6 +15,7 @@
           [attr.aria-pressed]="autoplay"
           class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           [ngClass]="autoplay ? 'bg-green-600' : 'bg-gray-300'"
+          aria-describedby="autoplay-desc"
         >
           <span
             class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition"
@@ -23,6 +24,10 @@
         </button>
       </div>
     </div>
+
+    <!-- Hidden descriptive text and live region announcement -->
+    <p id="autoplay-desc" class="sr-only">Toggle whether songs added by users are auto accepted.</p>
+    <div class="sr-only" aria-live="polite">{{ ariaAnnouncement }}</div>
 
     <div *ngIf="autoplay" class="mb-4 text-xs sm:text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2 flex items-start gap-2">
       <svg class="h-4 w-4 mt-0.5 flex-shrink-0 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -63,7 +68,7 @@
           >
             Accept
           </button>
-            <button
+          <button
             class="w-full sm:w-auto px-4 py-2 font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 text-sm sm:text-base transition"
           >
             Decline

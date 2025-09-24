@@ -1,3 +1,241 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Design Tokens (Light Theme) */
+:root {
+  /* Semantic palette */
+  --color-bg: #f8faf9;
+  --color-surface: #ffffff;
+  --color-border: #d9e2da;
+  --color-border-strong: #b7cab9;
+  --color-text: #1f3322;
+  --color-text-subtle: #4a5a4b;
+  --color-accent: #16a34a; /* primary green (Tailwind green-600) */
+  --color-accent-hover: #15803d;
+  --color-accent-muted: #dcfce7;
+  --color-accent-ring: #86efac;
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-muted: #fee2e2;
+  --color-info: #2563eb;
+  --color-info-muted: #dbeafe;
+
+  /* Radii */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-pill: 9999px;
+
+  /* Elevation */
+  --elev-card: 0 2px 4px -2px rgba(16,24,40,.06), 0 4px 8px -2px rgba(16,24,40,.1);
+  --elev-pop: 0 8px 24px -6px rgba(16,24,40,.18);
+
+  /* Typography scale */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Animation timings */
+  --ease-standard: cubic-bezier(.4,0,.2,1);
+  --dur-fast: 120ms;
+  --dur-mid: 200ms;
+  --dur-slow: 320ms;
+
+  /* Focus */
+  --focus-ring: 0 0 0 2px #fff, 0 0 0 4px var(--color-accent-ring);
+}
+
+/* Dark Mode Placeholder (Not Active Yet) */
+[data-theme='dark'] {
+  /* Provide tokens for future dark mode */
+  --color-bg: #111915;
+  --color-surface: #17221c;
+  --color-border: #2a3a31;
+  --color-border-strong: #355042;
+  --color-text: #f1f8f3;
+  --color-text-subtle: #b5c7bb;
+  --color-accent: #22c55e;
+  --color-accent-hover: #16a34a;
+  --color-accent-muted: #053a1d;
+  --color-accent-ring: #166534;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-muted: #3a1111;
+  --color-info: #60a5fa;
+  --color-info-muted: #1e3a5f;
+}
+
+/* Base Layer Enhancements */
+@layer base {
+  html, body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  /* Accessible focus outline for keyboard navigation */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Smooth focus transitions unless user prefers reduced motion */
+  :focus-visible,
+  .focus-ring {
+    transition: box-shadow var(--dur-mid) var(--ease-standard);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Component & Utility Layer */
+@layer components {
+  /* Card */
+  .card {
+    @apply rounded-xl border bg-white shadow;
+    border-color: var(--color-border);
+    box-shadow: var(--elev-card);
+    background: var(--color-surface);
+  }
+
+  /* Button base */
+  .btn {
+    @apply inline-flex items-center justify-center font-medium rounded-md px-4 py-2 text-sm transition;
+    font-family: var(--font-sans);
+    line-height: 1.25rem;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+  }
+  .btn-primary:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+  .btn-primary:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-text);
+  }
+  .btn-outline:hover {
+    background: var(--color-accent-muted);
+    border-color: var(--color-accent);
+  }
+  .btn-outline:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  .btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+  }
+  .btn-danger:hover {
+    background: var(--color-danger-hover);
+  }
+  .btn-danger:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--color-danger);
+  }
+
+  /* Inputs */
+  .input-base {
+    @apply w-full px-3 py-2 border rounded-md shadow-sm text-sm focus:outline-none;
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+  }
+  .input-base::placeholder {
+    color: var(--color-text-subtle);
+    opacity: .6;
+  }
+  .input-base:focus {
+    border-color: var(--color-accent);
+    box-shadow: var(--focus-ring);
+  }
+  .input-invalid {
+    border-color: var(--color-danger) !important;
+  }
+
+  /* Surface subtle */
+  .surface-muted {
+    background: var(--color-accent-muted);
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+    background: var(--color-accent-muted);
+    color: var(--color-accent-hover);
+  }
+
+  /* Utility to clamp text lines */
+  .line-clamp-1 { @apply overflow-hidden text-ellipsis whitespace-nowrap; }
+
+  /* Scroll area with subtle styling */
+  .scroll-y {
+    @apply overflow-y-auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--color-accent-muted);
+  }
+  .scroll-y::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scroll-y::-webkit-scrollbar-track {
+    background: var(--color-accent-muted);
+  }
+  .scroll-y::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 8px;
+  }
+
+  /* Focus ring utility class */
+  .focus-ring {
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Main landmark styling (for future role="main") */
+  .app-main {
+    @apply outline-none;
+  }
+  .app-main:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+}
+
+/* Animations (opt-in) */
+@layer utilities {
+  .fade-in {
+    animation: fade-in var(--dur-mid) var(--ease-standard);
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Reduced motion for custom fade if user prefers */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none !important;
+  }
+}

@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SearchResultsComponent } from '../search-results/search-results.component';
 import { MockMusicService, Song } from '../core/services/mock-music.service';
 import { NotificationService } from '../core/services/notification.service';
 import { AutoplayService } from '../core/services/autoplay.service';
+import { Subject, Subscription, debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -13,32 +14,53 @@ import { AutoplayService } from '../core/services/autoplay.service';
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent {
+export class SearchComponent implements OnDestroy {
   private service = inject(MockMusicService);
   private notifications = inject(NotificationService);
   private autoplayService = inject(AutoplayService);
 
+  // UI state
   query = '';
   loading = false;
   lastAddedSongId: string | null = null;
 
+  // Debounce stream
+  private queryInput$ = new Subject<string>();
+  private sub: Subscription;
+
+  constructor() {
+    // Debounce search input: trim + ignore consecutive duplicates + 300ms delay
+    this.sub = this.queryInput$
+      .pipe(
+        map(v => v.replace(/\s+/g, ' ')), // collapse inner whitespace
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe(val => {
+        this.query = val;
+        if (!this.query.trim()) {
+          this.clearResults();
+        } else {
+          this.performSearch();
+        }
+      });
+  }
+
   onQueryChange(value: string) {
     this.query = value;
-    if (!this.query.trim()) {
-      this.clearResults();
-      return;
-    }
-    this.performSearch();
+    this.queryInput$.next(value);
   }
 
   private clearResults() {
+    // Clear results (mock service called with empty string)
     this.service.searchSongs('').subscribe();
-    this.query = this.query.trim();
+    this.lastAddedSongId = null;
   }
 
-  performSearch() {
+  private performSearch() {
     this.loading = true;
-    this.service.searchSongs(this.query).subscribe({
+    const current = this.query.trim();
+    this.service.searchSongs(current).subscribe({
       next: () => {
         this.loading = false;
       },
@@ -70,10 +92,14 @@ export class SearchComponent {
     }
   }
 
-  // Clear search input via X button
   clearQuery() {
     this.query = '';
+    this.queryInput$.next('');
     this.service.searchSongs('').subscribe();
     this.notifications.info('Search cleared', 2500);
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 }

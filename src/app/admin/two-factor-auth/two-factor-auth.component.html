@@ -5,25 +5,35 @@
         Two-Factor Authentication
       </h2>
 
-      <form class="space-y-5 sm:space-y-6" (ngSubmit)="onSubmit()" #codeForm="ngForm" novalidate>
+      <form class="space-y-5 sm:space-y-6" (ngSubmit)="onSubmit()" novalidate>
         <div>
-          <!-- Visually hidden label kept for accessibility -->
           <label for="2fa-code" class="sr-only">Six digit authentication code</label>
           <input
+            twoFaCode
+            [length]="6"
+            (valueChange)="onCodeChange($event)"
+            (complete)="onCodeComplete($event)"
+            #codeInput
             type="text"
             id="2fa-code"
-            name="code"
-            maxlength="7"
-            [ngModel]="code"
-            (ngModelChange)="onCodeInput($event)"
-            class="tracking-widest text-center text-lg font-mono w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 placeholder:text-gray-400"
-            required
             inputmode="numeric"
             autocomplete="one-time-code"
             placeholder="000-000"
+            class="tracking-widest text-center text-lg font-mono w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 placeholder:text-gray-400
+              border-gray-300
+              [{{'ngClass'}}]"
+            [class.border-red-500]="submitted && codeDigits.length < 6"
+            [attr.aria-invalid]="submitted && codeDigits.length < 6 ? 'true' : 'false'"
+            [attr.aria-describedby]="submitted && codeDigits.length < 6 ? 'code-error' : null"
             aria-label="Six digit authentication code"
           />
+          <p *ngIf="submitted && codeDigits.length < 6" id="code-error" class="mt-2 text-sm text-red-600">
+            Enter the 6-digit code.
+          </p>
           <p *ngIf="resent" class="text-green-700 text-xs sm:text-sm mt-2">New code sent (simulated).</p>
+          <div class="sr-only" aria-live="polite">
+            <span *ngIf="cooldown > 0">You can resend a code in {{ cooldown }} seconds.</span>
+          </div>
         </div>
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -31,26 +41,24 @@
             type="button"
             (click)="resend()"
             class="text-xs sm:text-sm text-green-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed self-start"
-            [disabled]="loading || resent"
+            [disabled]="loading || cooldown > 0"
           >
-            Resend code
+            <ng-container *ngIf="cooldown === 0; else cooldownTpl">Resend code</ng-container>
+            <ng-template #cooldownTpl>Resend in {{ cooldown }}s</ng-template>
           </button>
           <button
             type="submit"
             [disabled]="loading"
             class="w-full sm:w-auto px-5 py-2.5 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-60 flex items-center justify-center gap-2 text-sm"
           >
-            <span *ngIf="!loading">Verify</span>
-            <span *ngIf="loading" class="flex items-center gap-2">
-              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-                </path>
-              </svg>
-              <span class="text-sm">Verifying</span>
-            </span>
+            <ng-container *ngIf="!loading; else verifySkeleton">Verify</ng-container>
           </button>
+          <ng-template #verifySkeleton>
+            <span class="flex items-center gap-3 w-full justify-center">
+              <span class="h-5 w-5 rounded-full bg-white/40 animate-pulse"></span>
+              <span class="h-4 w-24 rounded bg-white/40 animate-pulse"></span>
+            </span>
+          </ng-template>
         </div>
       </form>
     </div>

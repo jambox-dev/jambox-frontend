@@ -18,11 +18,18 @@ export class NotificationService {
   private readonly notificationsSubject = new BehaviorSubject<Notification[]>([]);
   readonly notifications$ = this.notificationsSubject.asObservable();
 
+  // Max number of notifications shown simultaneously
+  private readonly maxStack = 4;
+
   /**
    * Push a notification (success/info/error). Auto-dismiss after duration.
+   * Stack capped to maxStack (oldest removed first).
    */
   push(type: NotificationKind, message: string, duration = 4000) {
-    const id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+    const id = (globalThis as any).crypto?.randomUUID
+      ? (globalThis as any).crypto.randomUUID()
+      : Math.random().toString(36).slice(2);
+
     const notification: Notification = {
       id,
       type,
@@ -30,9 +37,15 @@ export class NotificationService {
       createdAt: Date.now(),
       duration
     };
-    const current = this.notificationsSubject.value;
-    this.notificationsSubject.next([...current, notification]);
 
+    const current = [...this.notificationsSubject.value, notification];
+    // Enforce max stack size by trimming oldest
+    if (current.length > this.maxStack) {
+      current.splice(0, current.length - this.maxStack);
+    }
+    this.notificationsSubject.next(current);
+
+    // Auto-dismiss
     setTimeout(() => this.dismiss(id), duration);
   }
 
@@ -53,6 +66,13 @@ export class NotificationService {
     if (filtered.length !== this.notificationsSubject.value.length) {
       this.notificationsSubject.next(filtered);
     }
+  }
+
+  dismissLatest() {
+    const list = this.notificationsSubject.value;
+    if (!list.length) return;
+    const latest = list[list.length - 1].id;
+    this.dismiss(latest);
   }
 
   clearAll() {
