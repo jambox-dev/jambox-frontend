@@ -39,7 +39,8 @@ export class SearchComponent implements OnDestroy {
       .subscribe(val => {
         this.query = val;
         if (!this.query.trim()) {
-          this.clearResults();
+          this.service.searchSongs('').subscribe();
+          this.lastAddedSongId = null;
         } else {
           this.performSearch();
         }
@@ -51,13 +52,13 @@ export class SearchComponent implements OnDestroy {
     this.queryInput$.next(value);
   }
 
-  private clearResults() {
-    // Clear results (mock service called with empty string)
-    this.service.searchSongs('').subscribe();
-    this.lastAddedSongId = null;
-  }
+  performSearch() {
+    if (!this.query.trim()) {
+      this.service.searchSongs('').subscribe();
+      this.lastAddedSongId = null;
+      return;
+    }
 
-  private performSearch() {
     this.loading = true;
     const current = this.query.trim();
     this.service.searchSongs(current).subscribe({
@@ -74,7 +75,7 @@ export class SearchComponent implements OnDestroy {
   handleAdd(song: Song) {
     try {
       const autoplay = this.autoplayService.isEnabled();
-      this.service.addToQueue(song);
+      this.service.addToQueue(song, autoplay);
       this.lastAddedSongId = song.id;
 
       if (autoplay) {

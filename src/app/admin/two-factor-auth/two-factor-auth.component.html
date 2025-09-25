@@ -1,11 +1,11 @@
-<div class="min-h-screen bg-gray-100 flex flex-col">
-  <div class="flex-grow flex items-center justify-center px-4 py-10">
-    <div class="w-full max-w-md p-6 sm:p-8 space-y-6 bg-white rounded-xl shadow-md border border-gray-200">
-      <h2 class="text-2xl sm:text-3xl font-bold text-center text-green-800 leading-tight">
+<div class="min-h-screen bg-gray-100 dark:bg-cuesonic-dark flex flex-col text-gray-800 dark:text-cuesonic-light-text">
+  <div class="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+    <div class="w-full max-w-md p-6 sm:p-8 space-y-6 bg-white dark:bg-gray-800/30 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700/50">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 dark:text-white leading-tight">
         Two-Factor Authentication
       </h2>
 
-      <form class="space-y-5 sm:space-y-6" (ngSubmit)="onSubmit()" novalidate>
+      <form class="space-y-6" (ngSubmit)="onSubmit()" novalidate>
         <div>
           <label for="2fa-code" class="sr-only">Six digit authentication code</label>
           <input
@@ -19,28 +19,26 @@
             inputmode="numeric"
             autocomplete="one-time-code"
             placeholder="000-000"
-            class="tracking-widest text-center text-lg font-mono w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 placeholder:text-gray-400
-              border-gray-300
-              [{{'ngClass'}}]"
+            class="tracking-widest text-center text-2xl font-mono w-full px-4 py-3 mt-2 bg-gray-100 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cuesonic-purple focus:border-cuesonic-purple placeholder:text-gray-400 dark:placeholder:text-gray-500 text-gray-900 dark:text-white"
             [class.border-red-500]="submitted && codeDigits.length < 6"
             [attr.aria-invalid]="submitted && codeDigits.length < 6 ? 'true' : 'false'"
             [attr.aria-describedby]="submitted && codeDigits.length < 6 ? 'code-error' : null"
             aria-label="Six digit authentication code"
           />
-          <p *ngIf="submitted && codeDigits.length < 6" id="code-error" class="mt-2 text-sm text-red-600">
+          <p *ngIf="submitted && codeDigits.length < 6" id="code-error" class="mt-2 text-sm text-red-500">
             Enter the 6-digit code.
           </p>
-          <p *ngIf="resent" class="text-green-700 text-xs sm:text-sm mt-2">New code sent (simulated).</p>
+          <p *ngIf="resent" class="text-cuesonic-purple text-sm mt-2">New code sent (simulated).</p>
           <div class="sr-only" aria-live="polite">
             <span *ngIf="cooldown > 0">You can resend a code in {{ cooldown }} seconds.</span>
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
           <button
             type="button"
             (click)="resend()"
-            class="text-xs sm:text-sm text-green-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed self-start"
+            class="text-sm text-cuesonic-purple hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
             [disabled]="loading || cooldown > 0"
           >
             <ng-container *ngIf="cooldown === 0; else cooldownTpl">Resend code</ng-container>
@@ -49,14 +47,14 @@
           <button
             type="submit"
             [disabled]="loading"
-            class="w-full sm:w-auto px-5 py-2.5 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-60 flex items-center justify-center gap-2 text-sm"
+            class="w-full sm:w-auto px-6 py-3 font-semibold text-white bg-cuesonic-purple rounded-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-cuesonic-dark focus:ring-cuesonic-purple disabled:opacity-50 flex items-center justify-center gap-2 text-base"
           >
             <ng-container *ngIf="!loading; else verifySkeleton">Verify</ng-container>
           </button>
           <ng-template #verifySkeleton>
             <span class="flex items-center gap-3 w-full justify-center">
-              <span class="h-5 w-5 rounded-full bg-white/40 animate-pulse"></span>
-              <span class="h-4 w-24 rounded bg-white/40 animate-pulse"></span>
+              <span class="h-5 w-5 rounded-full bg-white/30 animate-pulse"></span>
+              <span class="h-4 w-24 rounded bg-white/30 animate-pulse"></span>
             </span>
           </ng-template>
         </div>

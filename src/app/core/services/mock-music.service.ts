@@ -7,8 +7,10 @@ export interface Song {
   title: string;
   artist: string;
   album?: string;
-  thumbnailUrl: string;
+  thumbnailUrl?: string;
   durationSec?: number;
+  duration?: string;
+  approved?: boolean;
 }
 
 @Injectable({
@@ -87,10 +89,20 @@ export class MockMusicService {
     );
   }
 
-  addToQueue(song: Song): void {
+  addToQueue(song: Song, approved = false): void {
     const current = this.queueSubject.getValue();
     if (!current.find(s => s.id === song.id)) {
-      this.queueSubject.next([...current, song]);
+      const newSong = { ...song, approved };
+      this.queueSubject.next([...current, newSong]);
+    }
+  }
+
+  approveSong(id: string): void {
+    const current = this.queueSubject.getValue();
+    const song = current.find(s => s.id === id);
+    if (song) {
+      song.approved = true;
+      this.queueSubject.next([...current]);
     }
   }
 

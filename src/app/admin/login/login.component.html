@@ -1,51 +1,51 @@
-<div class="min-h-screen bg-gray-100 flex flex-col">
-  <div class="flex-grow flex items-center justify-center px-4 py-10">
-    <div class="w-full max-w-md p-6 sm:p-8 space-y-6 bg-white rounded-xl shadow-md border border-gray-200">
-      <h1 class="text-2xl sm:text-3xl font-bold text-center text-green-800 leading-tight">
+<div class="min-h-screen bg-gray-100 dark:bg-cuesonic-dark flex flex-col text-gray-800 dark:text-cuesonic-light-text">
+  <div class="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+    <div class="w-full max-w-md p-6 sm:p-8 space-y-6 bg-white dark:bg-gray-800/30 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700/50">
+      <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 dark:text-white leading-tight">
         Jambox Admin
       </h1>
 
-      <form #loginFormRef="ngForm" (ngSubmit)="onSubmit()" novalidate class="space-y-5 sm:space-y-6" role="form" aria-describedby="login-help">
+      <form #loginFormRef="ngForm" (ngSubmit)="onSubmit()" novalidate class="space-y-6" role="form" aria-describedby="login-help">
         <p id="login-help" class="sr-only">Enter your credentials to continue.</p>
 
         <div class="space-y-4">
           <!-- Username -->
-            <div>
-              <label for="username" class="block text-xs sm:text-sm font-medium text-gray-700 tracking-wide">
-                Username
-              </label>
-              <input
-                #usernameInput
-                type="text"
-                id="username"
-                name="username"
-                [(ngModel)]="username"
-                required
-                autocomplete="username"
-                class="w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                [class.border-red-500]="submitted && !username.trim()"
-                [attr.aria-invalid]="submitted && !username.trim()"
-                [attr.aria-describedby]="submitted && !username.trim() ? 'err-username' : null"
-              />
-              <p
-                *ngIf="submitted && !username.trim()"
-                id="err-username"
-                class="mt-1 text-xs text-red-600"
-              >
-                Enter your username.
-              </p>
-            </div>
+          <div>
+            <label for="username" class="block text-sm font-medium tracking-wide text-gray-700 dark:text-cuesonic-light-text">
+              Username
+            </label>
+            <input
+              #usernameInput
+              type="text"
+              id="username"
+              name="username"
+              [(ngModel)]="username"
+              required
+              autocomplete="username"
+              class="w-full px-4 py-3 mt-2 bg-gray-100 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cuesonic-purple focus:border-cuesonic-purple text-base text-gray-900 dark:text-white"
+              [class.border-red-500]="submitted && !username.trim()"
+              [attr.aria-invalid]="submitted && !username.trim()"
+              [attr.aria-describedby]="submitted && !username.trim() ? 'err-username' : null"
+            />
+            <p
+              *ngIf="submitted && !username.trim()"
+              id="err-username"
+              class="mt-2 text-sm text-red-500"
+            >
+              Enter your username.
+            </p>
+          </div>
 
           <!-- Password -->
           <div>
             <div class="flex items-center justify-between">
-              <label for="password" class="block text-xs sm:text-sm font-medium text-gray-700 tracking-wide">
+              <label for="password" class="block text-sm font-medium tracking-wide text-gray-700 dark:text-cuesonic-light-text">
                 Password
               </label>
               <button
                 type="button"
                 (click)="togglePassword()"
-                class="text-xs text-green-700 hover:underline focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
+                class="text-sm text-cuesonic-purple hover:underline focus:outline-none focus:ring-2 focus:ring-cuesonic-purple rounded"
                 [attr.aria-pressed]="showPassword"
               >
                 {{ showPassword ? 'Hide' : 'Show' }}
@@ -59,7 +59,7 @@
               [(ngModel)]="password"
               required
               autocomplete="current-password"
-              class="w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              class="w-full px-4 py-3 mt-2 bg-gray-100 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cuesonic-purple focus:border-cuesonic-purple text-base text-gray-900 dark:text-white"
               [class.border-red-500]="submitted && !password.trim()"
               [attr.aria-invalid]="submitted && !password.trim()"
               [attr.aria-describedby]="submitted && !password.trim() ? 'err-password' : null"
@@ -67,7 +67,7 @@
             <p
               *ngIf="submitted && !password.trim()"
               id="err-password"
-              class="mt-1 text-xs text-red-600"
+              class="mt-2 text-sm text-red-500"
             >
               Enter your password.
             </p>
@@ -78,14 +78,14 @@
           <button
             type="submit"
             [disabled]="loading"
-            class="w-full px-4 py-2.5 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
+            class="w-full px-4 py-3 font-semibold text-white bg-cuesonic-purple rounded-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-cuesonic-dark focus:ring-cuesonic-purple disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
           >
             <ng-container *ngIf="!loading; else loginSkeleton">Login</ng-container>
           </button>
           <ng-template #loginSkeleton>
             <span class="flex items-center gap-3 w-full justify-center">
-              <span class="h-5 w-5 rounded-full bg-white/40 animate-pulse"></span>
-              <span class="h-4 w-20 rounded bg-white/40 animate-pulse"></span>
+              <span class="h-5 w-5 rounded-full bg-white/30 animate-pulse"></span>
+              <span class="h-4 w-20 rounded bg-white/30 animate-pulse"></span>
             </span>
           </ng-template>
         </div>

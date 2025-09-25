@@ -11,10 +11,10 @@
   --color-border-strong: #b7cab9;
   --color-text: #1f3322;
   --color-text-subtle: #4a5a4b;
-  --color-accent: #16a34a; /* primary green (Tailwind green-600) */
-  --color-accent-hover: #15803d;
-  --color-accent-muted: #dcfce7;
-  --color-accent-ring: #86efac;
+  --color-accent: #4F46E5;
+  --color-accent-hover: #4338CA;
+  --color-accent-muted: #e0e7ff;
+  --color-accent-ring: #a5b4fc;
   --color-danger: #dc2626;
   --color-danger-hover: #b91c1c;
   --color-danger-muted: #fee2e2;
@@ -43,22 +43,21 @@
   --dur-slow: 320ms;
 
   /* Focus */
-  --focus-ring: 0 0 0 2px #fff, 0 0 0 4px var(--color-accent-ring);
+  --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent-ring);
 }
 
-/* Dark Mode Placeholder (Not Active Yet) */
-[data-theme='dark'] {
-  /* Provide tokens for future dark mode */
-  --color-bg: #111915;
-  --color-surface: #17221c;
-  --color-border: #2a3a31;
-  --color-border-strong: #355042;
-  --color-text: #f1f8f3;
-  --color-text-subtle: #b5c7bb;
-  --color-accent: #22c55e;
-  --color-accent-hover: #16a34a;
-  --color-accent-muted: #053a1d;
-  --color-accent-ring: #166534;
+/* Dark Mode */
+html.dark {
+  --color-bg: #1C2039;
+  --color-surface: #2A2F4B;
+  --color-border: #3E446A;
+  --color-border-strong: #4d5582;
+  --color-text: #ffffff;
+  --color-text-subtle: #A9B2CC;
+  --color-accent: #6366F1;
+  --color-accent-hover: #4F46E5;
+  --color-accent-muted: #312e81;
+  --color-accent-ring: #4f46e5;
   --color-danger: #ef4444;
   --color-danger-hover: #dc2626;
   --color-danger-muted: #3a1111;
