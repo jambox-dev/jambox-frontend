@@ -4,12 +4,15 @@
       <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">Admin Dashboard</h1>
       <p class="text-md sm:text-lg text-gray-500 dark:text-gray-400 mt-1">Manage song suggestions and the queue in real-time.</p>
     </div>
-    <div class="flex items-center self-end sm:self-center">
-      <span class="mr-4 text-gray-800 dark:text-white">Autoplay Mode</span>
+    <div class="flex items-center gap-4">
       <label for="autoplay-toggle" class="relative inline-flex items-center cursor-pointer">
         <input type="checkbox" id="autoplay-toggle" class="sr-only peer" [checked]="autoplay" (change)="toggleAutoplay()">
         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-cuesonic-purple/50 dark:peer-focus:ring-cuesonic-purple dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-cuesonic-purple"></div>
+        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Autoplay Mode</span>
       </label>
+      <button (click)="loginWithSpotify()" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 whitespace-nowrap">
+        Login with Spotify
+      </button>
     </div>
   </div>
 
@@ -29,10 +32,10 @@
             </div>
           </div>
           <div *ngIf="!autoplay" class="flex items-center space-x-2">
-            <button (click)="decline(song)" class="p-2 bg-red-100 dark:bg-red-900/50 rounded-full text-red-500 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900">
+            <button aria-label="Decline suggestion" (click)="decline(song)" class="p-2 bg-red-100 dark:bg-red-900/50 rounded-full text-red-500 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <button (click)="accept(song)" class="p-2 bg-green-100 dark:bg-green-900/50 rounded-full text-green-500 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900">
+            <button aria-label="Accept suggestion" (click)="accept(song)" class="p-2 bg-green-100 dark:bg-green-900/50 rounded-full text-green-500 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             </button>
           </div>

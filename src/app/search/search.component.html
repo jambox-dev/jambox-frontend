@@ -15,6 +15,7 @@
   <!-- Search Input -->
   <div class="w-full max-w-lg">
     <form (ngSubmit)="performSearch()" class="relative">
+      <label for="search-input" class="sr-only">Enter song name or Spotify URL</label>
       <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
         <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </div>
@@ -34,15 +35,14 @@
           type="button"
           (click)="query = ''; onQueryChange('');"
           class="p-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
-          aria-label="Clear search"
         >
+          <span class="sr-only">Clear search</span>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <button
           type="submit"
           class="p-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
           [disabled]="!query.trim() || loading"
-          aria-label="Search"
         >
           <svg *ngIf="loading" class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

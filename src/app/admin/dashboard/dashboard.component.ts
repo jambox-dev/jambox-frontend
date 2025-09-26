@@ -65,4 +65,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
+  loginWithSpotify() {
+    // TODO: Implement Spotify login
+    console.log('Logging in with Spotify...');
+  }
 }

@@ -23,7 +23,6 @@
             [class.border-red-500]="submitted && codeDigits.length < 6"
             [attr.aria-invalid]="submitted && codeDigits.length < 6 ? 'true' : 'false'"
             [attr.aria-describedby]="submitted && codeDigits.length < 6 ? 'code-error' : null"
-            aria-label="Six digit authentication code"
           />
           <p *ngIf="submitted && codeDigits.length < 6" id="code-error" class="mt-2 text-sm text-red-500">
             Enter the 6-digit code.

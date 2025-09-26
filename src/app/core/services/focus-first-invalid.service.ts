@@ -40,6 +40,8 @@ export class FocusFirstInvalidService {
 
   private isFocusable(el: Element): boolean {
     if (!(el instanceof HTMLElement)) return false;
+    // Check if the element is visible
+    if (el.offsetParent === null) return false;
     const tabindex = el.getAttribute('tabindex');
     const disabled = (el as HTMLInputElement).disabled;
     return !disabled && !el.hasAttribute('inert') && (el.tabIndex >= 0 || tabindex !== null);
