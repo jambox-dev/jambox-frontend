@@ -44,8 +44,17 @@ export class QueueService {
     return this.http.get<Song[]>(`${this.apiUrl}/search`, { params: { song_name: songName } });
   }
 
-  getQueueNeedsApproval(): Observable<ApprovalQueue[]> {
-    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval`);
+  getQueueNeedsApproval(): Observable<Song[]> {
+    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval`).pipe(
+      map(approvalQueue =>
+        approvalQueue.map(item => ({
+          id: item.id,
+          title: item.song.songName,
+          artist: item.song.author,
+          thumbnailUrl: item.song.songCover
+        } as Song))
+      )
+    );
   }
 
   searchQueueNeedsApproval(songName: string): Observable<ApprovalQueue[]> {

@@ -4,8 +4,14 @@ export interface QueueAddRequest {
   song_url: string;
 }
 
-export interface ApprovalQueue extends Song {
+export interface ApprovalQueue {
   id: string;
+  song: {
+    songUrl: string;
+    songName: string;
+    author: string;
+    songCover: string;
+  }
 }
 
 export interface ApproveRequest {
