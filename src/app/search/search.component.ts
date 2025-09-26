@@ -5,10 +5,11 @@ import { SearchResultsComponent } from '../search-results/search-results.compone
 import { QueueComponent } from '../queue/queue.component';
 import { Song } from '../core/models/song.model';
 import { NotificationService } from '../core/services/notification.service';
-import { Subject, Subscription, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged, map, switchMap, Observable } from 'rxjs';
 import { CompletionService } from '../core/services/completion.service';
 import { SongService } from '../core/services/song.service';
 import { QueueService } from '../core/services/queue.service';
+import { SpotifyService } from '../core/services/spotify.service';
 
 @Component({
   selector: 'app-search',
@@ -22,6 +23,7 @@ export class SearchComponent implements OnDestroy {
   private queueService = inject(QueueService);
   private completionService = inject(CompletionService);
   private notifications = inject(NotificationService);
+  private spotifyService = inject(SpotifyService);
 
   // UI state
   query = '';
@@ -29,12 +31,15 @@ export class SearchComponent implements OnDestroy {
   lastAddedSongId: string | null = null;
   completions: string[] = [];
   highlightedIndex = -1;
+  isSpotifyLoggedIn$: Observable<boolean>;
 
   // Debounce stream
   private queryInput$ = new Subject<string>();
   private sub: Subscription;
 
   constructor() {
+    this.isSpotifyLoggedIn$ = this.spotifyService.isLoggedIn();
+
     // Debounce search input: trim + ignore consecutive duplicates + 300ms delay
     this.sub = this.queryInput$
       .pipe(
