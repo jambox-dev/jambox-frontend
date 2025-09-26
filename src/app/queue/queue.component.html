@@ -3,7 +3,10 @@
   <div *ngIf="queue$ | async as queue" class="space-y-4">
     <div *ngFor="let song of queue; let i = index" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-between">
       <div class="flex items-center">
-        <div class="text-lg font-bold text-gray-400 dark:text-gray-500 mr-4">{{i + 1}}</div>
+        <div class="text-lg font-bold text-gray-400 dark:text-gray-500 mr-4">
+          <span *ngIf="i === 0; else showNumber">Now Playing</span>
+          <ng-template #showNumber>{{i}}</ng-template>
+        </div>
         <img [src]="song.thumbnailUrl" alt="Album cover for {{song.title}}" class="w-16 h-16 rounded-lg mr-4">
         <div>
           <p class="font-semibold text-gray-800 dark:text-white">{{song.title}}</p>

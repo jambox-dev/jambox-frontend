@@ -40,6 +40,7 @@ export class QueueService {
     );
   }
 
+
   searchQueue(songName: string): Observable<Song[]> {
     return this.http.get<Song[]>(`${this.apiUrl}/search`, { params: { song_name: songName } });
   }
