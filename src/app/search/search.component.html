@@ -26,6 +26,8 @@
           [(ngModel)]="query"
           [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onQueryChange($event)"
+          (blur)="performSearch()"
+          (keydown)="onKeydown($event)"
           class="w-full pl-12 pr-12 py-4 bg-gray-100 dark:bg-cuesonic-dark border border-gray-300 dark:border-cuesonic-purple/30 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-cuesonic-purple focus:border-cuesonic-purple"
           placeholder="Enter song name or Spotify URL..."
           autocomplete="off"
@@ -52,9 +54,13 @@
           </button>
         </div>
       </form>
-      <div *ngIf="completions.length > 0" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg dark:bg-cuesonic-dark">
+      <div *ngIf="completions.length > 0" (mousedown)="$event.preventDefault()" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg dark:bg-cuesonic-dark">
         <ul class="py-1">
-          <li *ngFor="let completion of completions" (click)="query = completion; performSearch()" class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-cuesonic-dark-light cursor-pointer">
+          <li *ngFor="let completion of completions; let i = index"
+              (click)="query = completion; performSearch()"
+              [class.bg-gray-100]="i === highlightedIndex"
+              [class.dark:bg-cuesonic-dark-light]="i === highlightedIndex"
+              class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-cuesonic-dark-light cursor-pointer">
             {{ completion }}
           </li>
         </ul>

@@ -28,6 +28,7 @@ export class SearchComponent implements OnDestroy {
   loading = false;
   lastAddedSongId: string | null = null;
   completions: string[] = [];
+  highlightedIndex = -1;
 
   // Debounce stream
   private queryInput$ = new Subject<string>();
@@ -44,17 +45,22 @@ export class SearchComponent implements OnDestroy {
       )
       .subscribe(completions => {
         this.completions = completions;
+        this.highlightedIndex = -1;
       });
   }
 
   onQueryChange(value: string) {
     this.query = value;
     this.queryInput$.next(value);
+
+    if (!value.trim()) {
+      this.songService.clearResults();
+    }
   }
 
   performSearch() {
+    this.clearCompletions();
     if (!this.query.trim()) {
-      // Clear search results
       return;
     }
 
@@ -85,9 +91,34 @@ export class SearchComponent implements OnDestroy {
   clearQuery() {
     this.query = '';
     this.queryInput$.next('');
-    this.completions = [];
-    // Clear search results
+    this.clearCompletions();
+    this.songService.clearResults();
     this.notifications.info('Search cleared', 2500);
+  }
+
+  clearCompletions() {
+    this.completions = [];
+    this.highlightedIndex = -1;
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (this.completions.length === 0) {
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.highlightedIndex = (this.highlightedIndex + 1) % this.completions.length;
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.highlightedIndex = (this.highlightedIndex - 1 + this.completions.length) % this.completions.length;
+    } else if (event.key === 'Enter') {
+      if (this.highlightedIndex > -1) {
+        event.preventDefault();
+        this.query = this.completions[this.highlightedIndex];
+        this.performSearch();
+      }
+    }
   }
 
   ngOnDestroy(): void {

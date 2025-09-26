@@ -37,4 +37,8 @@ export class SongService {
       tap(songs => this.searchResultsSubject.next(songs))
     );
   }
+
+  clearResults() {
+    this.searchResultsSubject.next([]);
+  }
 }
