@@ -7,7 +7,7 @@
         <a routerLink="/">Jambox</a>
       </div>
       <div class="flex items-center">
-        <a [routerLink]="isAdminRoute() ? '/' : '/admin'" class="px-4 py-2 rounded hover:bg-cuesonic-purple transition-colors">
+        <a *ngIf="isAdminRoute()" [routerLink]="isAdminRoute() ? '/' : '/admin'" class="px-4 py-2 rounded hover:bg-cuesonic-purple transition-colors">
           {{ isAdminRoute() ? 'User View' : 'Admin Dashboard' }}
         </a>
         <button (click)="toggleTheme()" class="p-2 rounded-full hover:bg-cuesonic-purple transition-colors ml-4" [attr.aria-label]="isDarkMode ? 'Activate light mode' : 'Activate dark mode'">
