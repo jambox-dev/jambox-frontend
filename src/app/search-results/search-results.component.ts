@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import { MockMusicService, Song } from '../core/services/mock-music.service';
+import { Song } from '../core/models/song.model';
 
 @Component({
   selector: 'app-search-results',
@@ -10,15 +10,7 @@ import { MockMusicService, Song } from '../core/services/mock-music.service';
   styleUrl: './search-results.component.css'
 })
 export class SearchResultsComponent {
-  private service = inject(MockMusicService);
-
-  // Getter pulling latest snapshot (simple mock scenario)
-  get results(): Song[] {
-    let snapshot: Song[] = [];
-    const sub = this.service.searchResults$.subscribe((r: Song[]) => (snapshot = r));
-    sub.unsubscribe();
-    return snapshot;
-  }
+  @Input() results: Song[] = [];
 
   @Output() add = new EventEmitter<Song>();
 

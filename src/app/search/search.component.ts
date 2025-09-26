@@ -2,20 +2,26 @@ import { Component, OnDestroy, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SearchResultsComponent } from '../search-results/search-results.component';
-import { MockMusicService, Song } from '../core/services/mock-music.service';
+import { QueueComponent } from '../queue/queue.component';
+import { Song } from '../core/models/song.model';
 import { NotificationService } from '../core/services/notification.service';
 import { AutoplayService } from '../core/services/autoplay.service';
-import { Subject, Subscription, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
+import { CompletionService } from '../core/services/completion.service';
+import { SongService } from '../core/services/song.service';
+import { QueueService } from '../core/services/queue.service';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchResultsComponent],
+  imports: [CommonModule, FormsModule, SearchResultsComponent, QueueComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnDestroy {
-  private service = inject(MockMusicService);
+  public songService = inject(SongService);
+  private queueService = inject(QueueService);
+  private completionService = inject(CompletionService);
   private notifications = inject(NotificationService);
   private autoplayService = inject(AutoplayService);
 
@@ -23,6 +29,7 @@ export class SearchComponent implements OnDestroy {
   query = '';
   loading = false;
   lastAddedSongId: string | null = null;
+  completions: string[] = [];
 
   // Debounce stream
   private queryInput$ = new Subject<string>();
@@ -34,16 +41,11 @@ export class SearchComponent implements OnDestroy {
       .pipe(
         map(v => v.replace(/\s+/g, ' ')), // collapse inner whitespace
         debounceTime(300),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        switchMap(query => this.completionService.getCompletion(query))
       )
-      .subscribe(val => {
-        this.query = val;
-        if (!this.query.trim()) {
-          this.service.searchSongs('').subscribe();
-          this.lastAddedSongId = null;
-        } else {
-          this.performSearch();
-        }
+      .subscribe(completions => {
+        this.completions = completions;
       });
   }
 
@@ -54,16 +56,15 @@ export class SearchComponent implements OnDestroy {
 
   performSearch() {
     if (!this.query.trim()) {
-      this.service.searchSongs('').subscribe();
-      this.lastAddedSongId = null;
+      // Clear search results
       return;
     }
 
     this.loading = true;
-    const current = this.query.trim();
-    this.service.searchSongs(current).subscribe({
-      next: () => {
+    this.songService.getSongs(this.query).subscribe({
+      next: (songs) => {
         this.loading = false;
+        // The search results component will be updated via a new mechanism
       },
       error: () => {
         this.loading = false;
@@ -73,30 +74,21 @@ export class SearchComponent implements OnDestroy {
   }
 
   handleAdd(song: Song) {
-    try {
-      const autoplay = this.autoplayService.isEnabled();
-      this.service.addToQueue(song, autoplay);
-      this.lastAddedSongId = song.id;
-
-      if (autoplay) {
-        const pos = this.service.getSongPosition(song.id);
-        this.notifications.success(
-          pos
-            ? `Song added. Position in queue: ${pos}.`
-            : 'Song added to queue.'
-        );
-      } else {
-        this.notifications.success('Song added to queue. Waiting for approval.');
+    this.queueService.addToQueue({ song_url: song.id }).subscribe({
+      next: () => {
+        this.notifications.success('Song added to queue.');
+      },
+      error: () => {
+        this.notifications.error('Could not add song.');
       }
-    } catch {
-      this.notifications.error('Could not add song.');
-    }
+    });
   }
 
   clearQuery() {
     this.query = '';
     this.queryInput$.next('');
-    this.service.searchSongs('').subscribe();
+    this.completions = [];
+    // Clear search results
     this.notifications.info('Search cleared', 2500);
   }
 

@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import { MockMusicService, Song } from '../../core/services/mock-music.service';
+import { Song } from '../../core/models/song.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { AutoplayService } from '../../core/services/autoplay.service';
 import { Subscription } from 'rxjs';
+import { QueueService } from '../../core/services/queue.service';
+import { ApprovalQueue } from '../../core/models/queue.model';
+import { SpotifyService } from '../../core/services/spotify.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +16,8 @@ import { Subscription } from 'rxjs';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  private service = inject(MockMusicService);
+  private queueService = inject(QueueService);
+  private spotifyService = inject(SpotifyService);
   private notifications = inject(NotificationService);
   private autoplayService = inject(AutoplayService);
   private sub: Subscription | undefined;
@@ -21,14 +25,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Live region announcement for accessibility
   ariaAnnouncement = '';
 
-  pending: Song[] = [];
+  pending: ApprovalQueue[] = [];
   queue: Song[] = [];
 
   ngOnInit(): void {
-    this.sub = this.service.queue$.subscribe(songs => {
-      this.pending = songs.filter(s => !s.approved);
-      this.queue = songs.filter(s => s.approved);
-    });
+    this.sub = this.queueService.getQueueNeedsApproval().subscribe(pending => this.pending = pending);
+    this.sub.add(this.queueService.getQueue().subscribe(queue => this.queue = queue));
   }
 
   get autoplay(): boolean {
@@ -44,29 +46,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.ariaAnnouncement = msg;
   }
 
-  accept(song: Song) {
-    this.service.approveSong(song.id);
-    this.notifications.success(`'${song.title}' has been added to the queue.`);
+  accept(song: ApprovalQueue) {
+    this.queueService.approveSong({ queue_id: song.id, approved: true }).subscribe(() => {
+      this.notifications.success(`'${song.title}' has been added to the queue.`);
+      this.ngOnInit(); // Refresh lists
+    });
   }
 
-  decline(song: Song) {
-    this.service.removeFromQueue(song.id);
-    this.notifications.info(`'${song.title}' has been declined.`);
+  decline(song: ApprovalQueue) {
+    this.queueService.approveSong({ queue_id: song.id, approved: false }).subscribe(() => {
+      this.notifications.info(`'${song.title}' has been declined.`);
+      this.ngOnInit(); // Refresh lists
+    });
   }
 
   remove(song: Song) {
-    this.service.removeFromQueue(song.id);
+    // This functionality does not exist in the new services, will be removed.
   }
 
   clear() {
-    this.service.clearQueue();
+    // This functionality does not exist in the new services, will be removed.
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
   loginWithSpotify() {
-    // TODO: Implement Spotify login
-    console.log('Logging in with Spotify...');
+    this.spotifyService.login().subscribe(response => {
+      window.location.href = response.headers.get('Location');
+    });
   }
 }
