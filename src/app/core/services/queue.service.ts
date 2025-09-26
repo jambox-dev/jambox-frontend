@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Song } from '../models/song.model';
-import { ApprovalQueue, ApproveRequest, QueueAddRequest } from '../models/queue.model';
+import { ApprovalQueue, ApproveRequest, QueueAddRequest, QueueSettings } from '../models/queue.model';
+import { environment } from '../../../environments/environment';
 
 interface BackendSong {
   id: string;
@@ -18,7 +19,7 @@ interface BackendSong {
 })
 export class QueueService {
 
-  private apiUrl = 'http://localhost:8080/queue';
+  private apiUrl = `${environment.apiUrl}/queue`;
 
   constructor(private http: HttpClient) { }
 
@@ -27,7 +28,7 @@ export class QueueService {
   }
 
   getQueue(): Observable<Song[]> {
-    return this.http.get<BackendSong[]>(this.apiUrl).pipe(
+    return this.http.get<BackendSong[]>(this.apiUrl.replace('/queue', '/spotify/queue')).pipe(
       map(backendSongs =>
         backendSongs.map(backendSong => ({
           id: backendSong.songUrl,
@@ -53,5 +54,13 @@ export class QueueService {
 
   approveSong(request: ApproveRequest): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/approve`, request);
+  }
+
+  getSettings(): Observable<QueueSettings> {
+    return this.http.get<QueueSettings>(`${this.apiUrl}/settings`);
+  }
+
+  updateSettings(needsApproval: boolean): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/settings?needs-approval=${needsApproval}`, {});
   }
 }

@@ -12,3 +12,7 @@ export interface ApproveRequest {
   queue_id: string;
   approved: boolean;
 }
+export interface QueueSettings {
+  id: 'SINGLETON';
+  needsApproval: boolean;
+}

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Song } from '../models/song.model';
+import { environment } from '../../../environments/environment';
 
 interface BackendSong {
   id: string;
@@ -17,7 +18,7 @@ interface BackendSong {
 })
 export class SongService {
 
-  private apiUrl = 'http://localhost:8080/songs';
+  private apiUrl = `${environment.apiUrl}/songs`;
   private searchResultsSubject = new BehaviorSubject<Song[]>([]);
   public searchResults$ = this.searchResultsSubject.asObservable();
 

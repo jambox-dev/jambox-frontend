@@ -5,7 +5,6 @@ import { SearchResultsComponent } from '../search-results/search-results.compone
 import { QueueComponent } from '../queue/queue.component';
 import { Song } from '../core/models/song.model';
 import { NotificationService } from '../core/services/notification.service';
-import { AutoplayService } from '../core/services/autoplay.service';
 import { Subject, Subscription, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
 import { CompletionService } from '../core/services/completion.service';
 import { SongService } from '../core/services/song.service';
@@ -23,7 +22,6 @@ export class SearchComponent implements OnDestroy {
   private queueService = inject(QueueService);
   private completionService = inject(CompletionService);
   private notifications = inject(NotificationService);
-  private autoplayService = inject(AutoplayService);
 
   // UI state
   query = '';
