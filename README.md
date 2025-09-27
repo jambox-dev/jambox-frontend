@@ -25,9 +25,9 @@ To build and run this project with Docker, follow these steps:
 
 2. **Run the Docker container:**
    ```bash
-   docker run -p 8080:80 jambox-front
+   docker run -p 4200:4200 jambox-front
    ```
-   Navigate to `http://localhost:8080/` to view the application.
+   Navigate to `http://localhost:4200/` to view the application.
 
 ## Running unit tests
 
