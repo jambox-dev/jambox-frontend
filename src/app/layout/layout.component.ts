@@ -1,8 +1,10 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, computed, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, Router, NavigationEnd } from '@angular/router';
 import { NotificationContainerComponent } from '../shared/notification-container/notification-container.component';
 import { filter } from 'rxjs';
+import { ThemeService, Theme } from '../core/services/theme.service';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-layout',
@@ -11,11 +13,18 @@ import { filter } from 'rxjs';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
-export class LayoutComponent implements OnInit {
-  isDarkMode = false;
+export class LayoutComponent implements AfterViewInit {
   private _isAdminRoute = false;
+  
+  isDarkMode = computed(() => {
+    const theme = this.themeService.theme();
+    if (theme === Theme.System) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return theme === Theme.Dark;
+  });
 
-  constructor(private renderer: Renderer2, private router: Router) {
+  constructor(public themeService: ThemeService, private router: Router) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(event => {
@@ -23,21 +32,12 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.setTheme();
+  ngAfterViewInit() {
+    initFlowbite();
   }
 
-  toggleTheme(): void {
-    this.isDarkMode = !this.isDarkMode;
-    this.setTheme();
-  }
-
-  private setTheme(): void {
-    if (this.isDarkMode) {
-      this.renderer.addClass(document.documentElement, 'dark');
-    } else {
-      this.renderer.removeClass(document.documentElement, 'dark');
-    }
+  setTheme(theme: string) {
+    this.themeService.setTheme(theme as Theme);
   }
 
   isAdminRoute(): boolean {
