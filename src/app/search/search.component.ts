@@ -11,6 +11,7 @@ import { SongService } from '../core/services/song.service';
 import { QueueService } from '../core/services/queue.service';
 import { SpotifyService } from '../core/services/spotify.service';
 import { YoutubeService } from '../core/services/youtube.service';
+// import { AmazonService } from '../core/services/amazon.service';
 
 @Component({
   selector: 'app-search',
@@ -26,6 +27,7 @@ export class SearchComponent implements OnDestroy {
   private notifications = inject(NotificationService);
   private spotifyService = inject(SpotifyService);
   private youtubeService = inject(YoutubeService);
+  // private amazonService = inject(AmazonService);
 
   // UI state
   query = '';
@@ -92,6 +94,24 @@ export class SearchComponent implements OnDestroy {
           this.notifications.error('Could not parse YouTube URL.');
         }
       });
+    // } else if (this.amazonService.isAmazonMusicUrl(query)) {
+    //   this.amazonService.getSongInfoFromUrl(query).subscribe(songInfo => {
+    //     if (songInfo) {
+    //       const searchQuery = `${songInfo.artist} - ${songInfo.songTitle}`;
+    //       this.songService.getSongs(searchQuery).subscribe({
+    //         next: () => {
+    //           this.loading = false;
+    //         },
+    //         error: () => {
+    //           this.loading = false;
+    //           this.notifications.error('Search failed.');
+    //         }
+    //       });
+    //     } else {
+    //       this.loading = false;
+    //       this.notifications.error('Could not parse Amazon Music URL.');
+    //     }
+    //   });
     } else {
       this.songService.getSongs(query).subscribe({
         next: () => {
