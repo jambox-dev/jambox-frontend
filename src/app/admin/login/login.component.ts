@@ -62,7 +62,7 @@ export class LoginComponent {
     setTimeout(() => {
       this.loading = false;
       this.notifications.success('Credentials accepted.');
-      this.router.navigate(['admin', '2fa']);
+      this.router.navigate(['admin', 'dashboard']);
     }, 600);
   }
 }

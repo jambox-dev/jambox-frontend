@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { CommonModule, NgFor } from '@angular/common';
 import { Song } from '../../core/models/song.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { map, Observable, Subscription, switchMap, take } from 'rxjs';
 import { QueueService } from '../../core/services/queue.service';
-import { ApprovalQueue } from '../../core/models/queue.model';
 import { SpotifyService } from '../../core/services/spotify.service';
+import { ApprovalQueue } from '../../core/models/queue.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,8 @@ export class DashboardComponent implements OnInit {
   public pending$!: Observable<Song[]>;
   public queue$!: Observable<Song[]>;
   public autoplay$!: Observable<boolean>;
+  public spotifyLoginUrl = `${environment.apiUrl}/spotify/login`;
+  public isSpotifyLoggedIn$!: Observable<boolean>;
 
   ngOnInit(): void {
     this.autoplay$ = this.queueService.getSettings().pipe(
@@ -33,7 +36,7 @@ export class DashboardComponent implements OnInit {
     );
     this.pending$ = this.queueService.getQueueNeedsApproval();
     this.queue$ = this.queueService.getQueue();
-    
+    this.isSpotifyLoggedIn$ = this.spotifyService.isLoggedIn();
 
   }
 
@@ -76,9 +79,4 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  loginWithSpotify() {
-    this.spotifyService.login().subscribe(response => {
-      window.location.href = response.headers.get('Location');
-    });
-  }
 }
