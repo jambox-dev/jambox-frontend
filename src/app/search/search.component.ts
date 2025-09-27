@@ -10,6 +10,7 @@ import { CompletionService } from '../core/services/completion.service';
 import { SongService } from '../core/services/song.service';
 import { QueueService } from '../core/services/queue.service';
 import { SpotifyService } from '../core/services/spotify.service';
+import { YoutubeService } from '../core/services/youtube.service';
 
 @Component({
   selector: 'app-search',
@@ -24,6 +25,7 @@ export class SearchComponent implements OnDestroy {
   private completionService = inject(CompletionService);
   private notifications = inject(NotificationService);
   private spotifyService = inject(SpotifyService);
+  private youtubeService = inject(YoutubeService);
 
   // UI state
   query = '';
@@ -65,21 +67,42 @@ export class SearchComponent implements OnDestroy {
 
   performSearch() {
     this.clearCompletions();
-    if (!this.query.trim()) {
+    const query = this.query.trim();
+    if (!query) {
       return;
     }
 
     this.loading = true;
-    this.songService.getSongs(this.query).subscribe({
-      next: (songs) => {
-        this.loading = false;
-        // The search results component will be updated via a new mechanism
-      },
-      error: () => {
-        this.loading = false;
-        this.notifications.error('Search failed.');
-      }
-    });
+
+    if (this.youtubeService.isYoutubeUrl(query)) {
+      this.youtubeService.getSongInfoFromUrl(query).subscribe(songInfo => {
+        if (songInfo) {
+          const searchQuery = `${songInfo.artist} - ${songInfo.songTitle}`;
+          this.songService.getSongs(searchQuery).subscribe({
+            next: () => {
+              this.loading = false;
+            },
+            error: () => {
+              this.loading = false;
+              this.notifications.error('Search failed.');
+            }
+          });
+        } else {
+          this.loading = false;
+          this.notifications.error('Could not parse YouTube URL.');
+        }
+      });
+    } else {
+      this.songService.getSongs(query).subscribe({
+        next: () => {
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.notifications.error('Search failed.');
+        }
+      });
+    }
   }
 
   handleAdd(song: Song) {
