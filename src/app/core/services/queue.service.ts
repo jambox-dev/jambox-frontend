@@ -34,7 +34,7 @@ export class QueueService {
           id: backendSong.songUrl,
           title: backendSong.songName,
           artist: backendSong.author,
-          thumbnailUrl: backendSong.songCover
+          thumbnailUrl: backendSong.songCover,
         } as Song))
       )
     );
