@@ -14,6 +14,21 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
+## Docker
+
+To build and run this project with Docker, follow these steps:
+
+1. **Build the Docker image:**
+   ```bash
+   docker build -t jambox-front .
+   ```
+
+2. **Run the Docker container:**
+   ```bash
+   docker run -p 8080:80 jambox-front
+   ```
+   Navigate to `http://localhost:8080/` to view the application.
+
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
