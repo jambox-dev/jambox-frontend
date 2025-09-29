@@ -1,17 +1,17 @@
 <div class="flex flex-col min-h-screen" [class.dark]="isDarkMode()">
   <!-- Header -->
-  <header class="w-full bg-cuesonic-dark text-white">
+  <header class="w-full bg-jambox-dark text-white">
     <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
       <div class="text-2xl font-bold flex items-center">
         <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 6l12-3"></path></svg>
         <a routerLink="/">Jambox</a>
       </div>
       <div class="flex items-center">
-        <a *ngIf="isAdminRoute()" [routerLink]="isAdminRoute() ? '/' : '/admin'" class="px-4 py-2 rounded hover:bg-cuesonic-purple transition-colors">
+        <a *ngIf="isAdminRoute()" [routerLink]="isAdminRoute() ? '/' : '/admin'" class="px-4 py-2 rounded hover:bg-jambox-purple transition-colors">
           {{ isAdminRoute() ? 'User View' : 'Admin Dashboard' }}
         </a>
         
-        <button id="theme-toggle" data-dropdown-toggle="theme-dropdown" class="p-2 rounded-full hover:bg-cuesonic-purple transition-colors ml-4" type="button">
+        <button id="theme-toggle" data-dropdown-toggle="theme-dropdown" class="p-2 rounded-full hover:bg-jambox-purple transition-colors ml-4" type="button">
           <span class="sr-only">Open theme menu</span>
           <svg *ngIf="themeService.theme() === 'light'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
           <svg *ngIf="themeService.theme() === 'dark'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>

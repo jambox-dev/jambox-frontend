@@ -8,9 +8,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'cuesonic-dark': '#1C2039',
-        'cuesonic-purple': '#4F46E5', // Using indigo-600 as a replacement for now
-        'cuesonic-light-text': '#A9B2CC',
+        'jambox-dark': '#1C2039',
+        'jambox-purple': '#4F46E5', // Using indigo-600 as a replacement for now
+        'jambox-light-text': '#A9B2CC',
+        'jambox-dark-light': '#3E446A',
       }
     },
   },

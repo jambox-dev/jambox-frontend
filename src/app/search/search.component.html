@@ -2,8 +2,8 @@
 
   <div class="mb-6">
     <ng-container *ngIf="isSpotifyLoggedIn$ | async; else submissionsClosed">
-      <span class="bg-cuesonic-purple/10 text-cuesonic-purple text-sm font-medium px-4 py-1.5 rounded-full">
-        <span class="relative inline-flex h-2 w-2 mr-2 bg-cuesonic-purple rounded-full"></span>
+      <span class="bg-jambox-purple/10 text-jambox-purple text-sm font-medium px-4 py-1.5 rounded-full">
+        <span class="relative inline-flex h-2 w-2 mr-2 bg-jambox-purple rounded-full"></span>
         Submissions are Open
       </span>
     </ng-container>
@@ -17,7 +17,7 @@
 
   <ng-container *ngIf="isSpotifyLoggedIn$ | async; else welcomeMessage">
     <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">Suggest a Song</h1>
-    <p class="text-lg text-cuesonic-light-text max-w-xl mb-8">
+    <p class="text-lg text-jambox-light-text max-w-xl mb-8">
       Heard a tune you love? Share a song name or link. If autoplay is on, it'll be sent to the admin for a chance to be queued up!
     </p>
 
@@ -37,7 +37,7 @@
             (ngModelChange)="onQueryChange($event)"
             (blur)="performSearch()"
             (keydown)="onKeydown($event)"
-            class="w-full pl-12 pr-12 py-4 bg-gray-100 dark:bg-cuesonic-dark border border-gray-300 dark:border-cuesonic-purple/30 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-cuesonic-purple focus:border-cuesonic-purple"
+            class="w-full pl-12 pr-12 py-4 bg-gray-100 dark:bg-jambox-dark border border-gray-300 dark:border-jambox-purple/30 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-jambox-purple focus:border-jambox-purple"
             placeholder="Enter song name or Spotify URL..."
             autocomplete="off"
           />
@@ -63,13 +63,14 @@
             </button>
           </div>
         </form>
-        <div *ngIf="completions.length > 0" (mousedown)="$event.preventDefault()" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg dark:bg-cuesonic-dark">
+        <div *ngIf="completions.length > 0 && query.trim()" (mousedown)="$event.preventDefault()" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg dark:bg-jambox-dark">
           <ul class="py-1">
             <li *ngFor="let completion of completions; let i = index"
                 (click)="query = completion; performSearch()"
                 [class.bg-gray-100]="i === highlightedIndex"
-                [class.dark:bg-cuesonic-dark-light]="i === highlightedIndex"
-                class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-cuesonic-dark-light cursor-pointer">
+                [class.dark:bg-jambox-dark-light]="i === highlightedIndex"
+                [class.dark:text-gray-800]="i === highlightedIndex"
+                class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-jambox-dark-light cursor-pointer">
               {{ completion }}
             </li>
           </ul>
@@ -90,7 +91,7 @@
   <ng-template #welcomeMessage>
     <div class="text-center">
         <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">Welcome to Jambox</h1>
-        <p class="text-lg text-cuesonic-light-text max-w-xl mb-8">
+        <p class="text-lg text-jambox-light-text max-w-xl mb-8">
             Jambox is a collaborative music queueing application. When an admin is logged in, you can suggest songs to be added to the queue.
         </p>
     </div>
