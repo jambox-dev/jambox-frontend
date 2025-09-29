@@ -1,0 +1,30 @@
+<div id="print-section" class="bg-gray-900 text-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+  <div class="text-center mb-8">
+    <h1 class="text-5xl font-bold">JAMBOX</h1>
+    <p class="text-xl">DEINE DIGITALE JUKEBOX FÜR PARTYS & EVENTS</p>
+  </div>
+  <div class="flex justify-center items-center">
+    <div class="w-1/2 pr-8">
+      <ul class="list-disc list-inside text-lg">
+        <li class="mb-2">MUSIK TEILEN.</li>
+        <li class="mb-2">GEMEINSAM ENTDECKEN.</li>
+        <li class="mb-2">ECHTZEIT-PLAYLISTS.</li>
+        <li class="mb-2">ALLE PLATTFORMEN.</li>
+        <li>DEINE PARTY, DEINE MUSIK.</li>
+      </ul>
+    </div>
+    <div class="w-1/2 text-center">
+      <p class="text-lg mb-2">JETZT ENTDECKEN!</p>
+      <img [src]="qrCodeUrl" alt="QR Code" class="mx-auto">
+      <p class="mt-2">jambox.wiegandt.tech</p>
+    </div>
+  </div>
+  <div class="text-center mt-8">
+    <p class="text-lg">JAMBOX - CONNECTING PEOPLE THROUGH MUSIC. 🎵</p>
+  </div>
+</div>
+<div class="text-center mt-8">
+    <button (click)="downloadAsPdf()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Download as DIN A4 PDF
+    </button>
+</div>
