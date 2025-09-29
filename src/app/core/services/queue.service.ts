@@ -28,7 +28,7 @@ export class QueueService {
   }
 
   getQueue(): Observable<Song[]> {
-    return this.http.get<BackendSong[]>(this.apiUrl.replace('/queue', '/spotify/queue')).pipe(
+    return this.http.get<BackendSong[]>(this.apiUrl.replace('/queue', '/spotify/queue'), { withCredentials: true }).pipe(
       map(backendSongs =>
         backendSongs.map(backendSong => ({
           id: backendSong.songUrl,
@@ -42,11 +42,11 @@ export class QueueService {
 
 
   searchQueue(songName: string): Observable<Song[]> {
-    return this.http.get<Song[]>(`${this.apiUrl}/search`, { params: { song_name: songName } });
+    return this.http.get<Song[]>(`${this.apiUrl}/search`, { params: { song_name: songName } , withCredentials: true });
   }
 
   getQueueNeedsApproval(): Observable<Song[]> {
-    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval`).pipe(
+    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval`, { withCredentials: true }).pipe(
       map(approvalQueue =>
         approvalQueue.map(item => ({
           id: item.id,
@@ -59,18 +59,18 @@ export class QueueService {
   }
 
   searchQueueNeedsApproval(songName: string): Observable<ApprovalQueue[]> {
-    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval/search`, { params: { song_name: songName } });
+    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval/search`, { params: { song_name: songName } , withCredentials: true });
   }
 
   approveSong(request: ApproveRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/approve`, request);
+    return this.http.post<void>(`${this.apiUrl}/approve`, request , { withCredentials: true });
   }
 
   getSettings(): Observable<QueueSettings> {
-    return this.http.get<QueueSettings>(`${this.apiUrl}/settings`);
+    return this.http.get<QueueSettings>(`${this.apiUrl}/settings`, { withCredentials: true });
   }
 
   updateSettings(needsApproval: boolean): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/settings?needs-approval=${needsApproval}`, {});
+    return this.http.post<void>(`${this.apiUrl}/settings?needs-approval=${needsApproval}`, {}, { withCredentials: true });
   }
 }

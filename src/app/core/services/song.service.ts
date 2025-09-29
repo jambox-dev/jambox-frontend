@@ -25,7 +25,7 @@ export class SongService {
   constructor(private http: HttpClient) { }
 
   getSongs(songName: string): Observable<Song[]> {
-    return this.http.get<BackendSong[]>(this.apiUrl, { params: { song_name: songName } }).pipe(
+    return this.http.get<BackendSong[]>(this.apiUrl, { params: { song_name: songName } , withCredentials: true }).pipe(
       map(backendSongs =>
         backendSongs.map(backendSong => ({
           id: backendSong.songUrl,

@@ -13,6 +13,6 @@ export class CompletionService {
   constructor(private http: HttpClient) { }
 
   getCompletion(search: string): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl, { params: { search } });
+    return this.http.get<string[]>(this.apiUrl, { params: { search } , withCredentials: true });
   }
 }

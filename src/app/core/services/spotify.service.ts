@@ -14,11 +14,11 @@ export class SpotifyService {
   constructor(private http: HttpClient) { }
 
   login(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/login`, { observe: 'response' });
+    return this.http.get(`${this.apiUrl}/login`, { observe: 'response' , withCredentials: true });
   }
 
   isLoggedIn(): Observable<boolean> {
-    return this.http.get(`${this.apiUrl}/loggedin`, { observe: 'response' }).pipe(
+    return this.http.get(`${this.apiUrl}/loggedin`, { observe: 'response' , withCredentials: true }).pipe(
       map(response => response.status === 200),
       catchError(() => of(false))
     );
