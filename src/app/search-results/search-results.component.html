@@ -1,5 +1,5 @@
 <div class="mt-8" *ngIf="results && results.length > 0; else noResults">
-  <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Results</h2>
+  <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">{{ 'SEARCH_RESULTS.RESULTS' | translate }}</h2>
   <div class="space-y-3">
     <div
       *ngFor="let song of results"
@@ -26,7 +26,7 @@
       <button
         (click)="onAdd(song)"
         class="flex items-center justify-center w-9 h-9 rounded-full bg-jambox-purple text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-jambox-purple active:scale-95 transition"
-        [attr.aria-label]="'Add ' + song.title + ' by ' + song.artist"
+        [attr.aria-label]="'SEARCH_RESULTS.ADD_SONG' | translate:{songTitle: song.title, songArtist: song.artist}"
         type="button"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
@@ -40,14 +40,14 @@
 
   <div class="mt-4 text-center">
     <button (click)="loadMore.emit()" [disabled]="loading" class="text-sm font-medium text-jambox-purple hover:underline disabled:opacity-50">
-      <span *ngIf="loading">Loading...</span>
-      <span *ngIf="!loading">Show More</span>
+      <span *ngIf="loading">{{ 'SEARCH_RESULTS.LOADING' | translate }}</span>
+      <span *ngIf="!loading">{{ 'SEARCH_RESULTS.SHOW_MORE' | translate }}</span>
     </button>
   </div>
 </div>
 
 <ng-template #noResults>
   <div class="mt-8 text-gray-500 dark:text-gray-400 text-sm italic">
-    No results yet. Try searching for a song.
+    {{ 'SEARCH_RESULTS.NO_RESULTS' | translate }}
   </div>
 </ng-template>

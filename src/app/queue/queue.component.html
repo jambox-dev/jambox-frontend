@@ -1,10 +1,10 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">Song Queue</h1>
+  <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4">{{ 'QUEUE.TITLE' | translate }}</h1>
   <div *ngIf="queue$ | async as queue" class="space-y-4">
     <div *ngFor="let song of queue; let i = index" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-between">
       <div class="flex items-center">
         <div class="text-lg font-bold text-gray-400 dark:text-gray-500 mr-4">
-          <span *ngIf="i === 0; else showNumber">Now Playing</span>
+          <span *ngIf="i === 0; else showNumber">{{ 'QUEUE.NOW_PLAYING' | translate }}</span>
           <ng-template #showNumber>{{i}}</ng-template>
         </div>
         <img [src]="song.thumbnailUrl" alt="Album cover for {{song.title}}" class="w-16 h-16 rounded-lg mr-4">
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div *ngIf="queue.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
-      The queue is empty.
+      {{ 'QUEUE.EMPTY' | translate }}
     </div>
   </div>
 </div>

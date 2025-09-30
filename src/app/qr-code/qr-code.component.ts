@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import QRCode from 'qrcode';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-qr-code',
   templateUrl: './qr-code.component.html',
   styleUrls: ['./qr-code.component.css'],
   standalone: true,
+  imports: [TranslatePipe]
 })
 export class QrCodeComponent implements OnInit {
   qrCodeUrl: string = '';

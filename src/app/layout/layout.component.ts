@@ -5,11 +5,12 @@ import { NotificationContainerComponent } from '../shared/notification-container
 import { filter } from 'rxjs';
 import { ThemeService, Theme } from '../core/services/theme.service';
 import { initFlowbite } from 'flowbite';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, NotificationContainerComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, NotificationContainerComponent, TranslatePipe],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })

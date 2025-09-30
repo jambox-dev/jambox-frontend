@@ -4,28 +4,28 @@
     <ng-container *ngIf="isSpotifyLoggedIn$ | async; else submissionsClosed">
       <span class="bg-jambox-purple/10 text-jambox-purple text-sm font-medium px-4 py-1.5 rounded-full">
         <span class="relative inline-flex h-2 w-2 mr-2 bg-jambox-purple rounded-full"></span>
-        Submissions are Open
+        {{ 'SEARCH.SUBMISSIONS_OPEN' | translate }}
       </span>
     </ng-container>
     <ng-template #submissionsClosed>
       <span class="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-sm font-medium px-4 py-1.5 rounded-full">
         <span class="relative inline-flex h-2 w-2 mr-2 bg-gray-400 dark:bg-gray-500 rounded-full"></span>
-        Submissions are Closed
+        {{ 'SEARCH.SUBMISSIONS_CLOSED' | translate }}
       </span>
     </ng-template>
   </div>
 
   <ng-container *ngIf="isSpotifyLoggedIn$ | async; else welcomeMessage">
-    <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">Suggest a Song</h1>
+    <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">{{ 'SEARCH.SUGGEST_A_SONG' | translate }}</h1>
     <p class="text-lg text-jambox-light-text max-w-xl mb-8">
-      Heard a tune you love? Share a song name or link. If autoplay is on, it'll be sent to the admin for a chance to be queued up!
+      {{ 'SEARCH.SUGGEST_A_SONG_DESCRIPTION' | translate }}
     </p>
 
     <!-- Search Input -->
     <div class="w-full max-w-lg">
       <div class="relative">
         <form (ngSubmit)="performSearch()">
-          <label for="search-input" class="sr-only">Enter song name or Spotify URL</label>
+          <label for="search-input" class="sr-only">{{ 'SEARCH.ENTER_SONG_NAME_OR_SPOTIFY_URL' | translate }}</label>
           <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
             <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           </div>
@@ -48,7 +48,7 @@
               (click)="query = ''; onQueryChange('');"
               class="p-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
             >
-              <span class="sr-only">Clear search</span>
+              <span class="sr-only">{{ 'SEARCH.CLEAR_SEARCH' | translate }}</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             <button
@@ -90,9 +90,9 @@
 
   <ng-template #welcomeMessage>
     <div class="text-center">
-        <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">Welcome to Jambox</h1>
+        <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">{{ 'SEARCH.WELCOME_TO_JAMBOX' | translate }}</h1>
         <p class="text-lg text-jambox-light-text max-w-xl mb-8">
-            Jambox is a collaborative music queueing application. When an admin is logged in, you can suggest songs to be added to the queue.
+            {{ 'SEARCH.WELCOME_TO_JAMBOX_DESCRIPTION' | translate }}
         </p>
     </div>
   </ng-template>

@@ -1,5 +1,51 @@
 {
   "SEARCH": {
-    "PLACEHOLDER": "Search for a song"
+    "PLACEHOLDER": "Search for a song",
+    "SUBMISSIONS_OPEN": "Submissions are Open",
+    "SUBMISSIONS_CLOSED": "Submissions are Closed",
+    "SUGGEST_A_SONG": "Suggest a Song",
+    "SUGGEST_A_SONG_DESCRIPTION": "Heard a tune you love? Share a song name or link. If autoplay is on, it'll be sent to the admin for a chance to be queued up!",
+    "ENTER_SONG_NAME_OR_SPOTIFY_URL": "Enter song name or Spotify URL",
+    "CLEAR_SEARCH": "Clear search",
+    "WELCOME_TO_JAMBOX": "Welcome to Jambox",
+    "WELCOME_TO_JAMBOX_DESCRIPTION": "Jambox is a collaborative music queueing application. When an admin is logged in, you can suggest songs to be added to the queue."
+  },
+  "NOT_FOUND": {
+    "TITLE": "404 - Page Not Found",
+    "DESCRIPTION": "The page you are looking for does not exist.",
+    "GO_TO_HOMEPAGE": "Go to Homepage"
+  },
+  "QUEUE": {
+    "TITLE": "Song Queue",
+    "NOW_PLAYING": "Now Playing",
+    "EMPTY": "The queue is empty."
+  },
+  "QR_CODE": {
+    "TITLE": "JAMBOX",
+    "SUBTITLE": "YOUR DIGITAL JUKEBOX FOR PARTIES & EVENTS",
+    "FEATURE_1": "SHARE MUSIC.",
+    "FEATURE_2": "DISCOVER TOGETHER.",
+    "FEATURE_3": "REAL-TIME PLAYLISTS.",
+    "FEATURE_4": "ALL PLATFORMS.",
+    "FEATURE_5": "YOUR PARTY, YOUR MUSIC.",
+    "DISCOVER_NOW": "DISCOVER NOW!",
+    "TECH_URL": "jambox.wiegandt.tech",
+    "SLOGAN": "CONNECTING PEOPLE THROUGH MUSIC. 🎵",
+    "DOWNLOAD_PDF": "Download as DIN A4 PDF"
+  },
+  "LAYOUT": {
+    "USER_VIEW": "User View",
+    "ADMIN_DASHBOARD": "Admin Dashboard",
+    "OPEN_THEME_MENU": "Open theme menu",
+    "LIGHT": "Light",
+    "DARK": "Dark",
+    "SYSTEM": "System"
+  },
+  "SEARCH_RESULTS": {
+    "RESULTS": "Results",
+    "ADD_SONG": "Add {songTitle} by {songArtist}",
+    "SHOW_MORE": "Show More",
+    "LOADING": "Loading...",
+    "NO_RESULTS": "No results yet. Try searching for a song."
   }
 }

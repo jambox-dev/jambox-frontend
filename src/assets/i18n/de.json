@@ -1,5 +1,51 @@
 {
   "SEARCH": {
-    "PLACEHOLDER": "Suche nach einem Lied"
+    "PLACEHOLDER": "Suche nach einem Lied",
+    "SUBMISSIONS_OPEN": "Vorschläge können eingereicht werden",
+    "SUBMISSIONS_CLOSED": "Einreichungen sind geschlossen",
+    "SUGGEST_A_SONG": "Schlage ein Lied vor",
+    "SUGGEST_A_SONG_DESCRIPTION": "Hast du ein Lied gehört, das du liebst? Teile einen Songnamen oder Link. Wenn Autoplay aktiviert ist, wird es an den Admin gesendet, um eine Chance zu haben, in die Warteschlange gestellt zu werden!",
+    "ENTER_SONG_NAME_OR_SPOTIFY_URL": "Gib einen Songnamen oder eine Spotify-URL ein",
+    "CLEAR_SEARCH": "Suche löschen",
+    "WELCOME_TO_JAMBOX": "Willkommen bei Jambox",
+    "WELCOME_TO_JAMBOX_DESCRIPTION": "Jambox ist eine kollaborative Anwendung zur Erstellung von Musik-Warteschlangen. Wenn ein Admin angemeldet ist, kannst du Songs vorschlagen, die zur Warteschlange hinzugefügt werden sollen."
+  },
+  "NOT_FOUND": {
+    "TITLE": "404 - Seite nicht gefunden",
+    "DESCRIPTION": "Die von Ihnen gesuchte Seite existiert nicht.",
+    "GO_TO_HOMEPAGE": "Zur Startseite"
+  },
+  "QUEUE": {
+    "TITLE": "Song-Warteschlange",
+    "NOW_PLAYING": "Jetzt live",
+    "EMPTY": "Die Warteschlange ist leer."
+  },
+  "QR_CODE": {
+    "TITLE": "JAMBOX",
+    "SUBTITLE": "DEINE DIGITALE JUKEBOX FÜR PARTYS & EVENTS",
+    "FEATURE_1": "MUSIK TEILEN.",
+    "FEATURE_2": "GEMEINSAM ENTDECKEN.",
+    "FEATURE_3": "ECHTZEIT-PLAYLISTS.",
+    "FEATURE_4": "ALLE PLATTFORMEN.",
+    "FEATURE_5": "DEINE PARTY, DEINE MUSIK.",
+    "DISCOVER_NOW": "JETZT ENTDECKEN!",
+    "TECH_URL": "jambox.wiegandt.tech",
+    "SLOGAN": "MENSCHEN DURCH MUSIK VERBINDEN. 🎵",
+    "DOWNLOAD_PDF": "Als DIN A4 PDF herunterladen"
+  },
+  "LAYOUT": {
+    "USER_VIEW": "Benutzeransicht",
+    "ADMIN_DASHBOARD": "Admin-Dashboard",
+    "OPEN_THEME_MENU": "Öffnen Sie das Themenmenü",
+    "LIGHT": "Hell",
+    "DARK": "Dunkel",
+    "SYSTEM": "System"
+  },
+  "SEARCH_RESULTS": {
+    "RESULTS": "Ergebnisse",
+    "ADD_SONG": "{songTitle} von {songArtist} hinzufügen",
+    "SHOW_MORE": "Mehr anzeigen",
+    "LOADING": "Wird geladen...",
+    "NO_RESULTS": "Noch keine Ergebnisse. Versuchen Sie, nach einem Lied zu suchen."
   }
 }
