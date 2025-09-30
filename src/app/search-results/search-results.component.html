@@ -37,6 +37,13 @@
       </button>
     </div>
   </div>
+
+  <div class="mt-4 text-center">
+    <button (click)="loadMore.emit()" [disabled]="loading" class="text-sm font-medium text-jambox-purple hover:underline disabled:opacity-50">
+      <span *ngIf="loading">Loading...</span>
+      <span *ngIf="!loading">Show More</span>
+    </button>
+  </div>
 </div>
 
 <ng-template #noResults>

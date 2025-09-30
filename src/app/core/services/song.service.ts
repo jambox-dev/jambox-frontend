@@ -24,8 +24,12 @@ export class SongService {
 
   constructor(private http: HttpClient) { }
 
-  getSongs(songName: string): Observable<Song[]> {
-    return this.http.get<BackendSong[]>(this.apiUrl, { params: { song_name: songName } , withCredentials: true }).pipe(
+  getSongs(songName: string, offset = 0): Observable<Song[]> {
+    const params: { song_name: string, offset?: string } = { song_name: songName };
+    if (offset > 0) {
+      params.offset = String(offset);
+    }
+    return this.http.get<BackendSong[]>(this.apiUrl, { params: params, withCredentials: true }).pipe(
       map(backendSongs =>
         backendSongs.map(backendSong => ({
           id: backendSong.songUrl,
@@ -34,7 +38,14 @@ export class SongService {
           thumbnailUrl: backendSong.songCover
         } as Song))
       ),
-      tap(songs => this.searchResultsSubject.next(songs))
+      tap(songs => {
+        if (offset > 0) {
+          const currentSongs = this.searchResultsSubject.getValue();
+          this.searchResultsSubject.next([...currentSongs, ...songs]);
+        } else {
+          this.searchResultsSubject.next(songs);
+        }
+      })
     );
   }
 

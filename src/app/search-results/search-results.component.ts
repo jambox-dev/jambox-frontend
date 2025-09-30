@@ -11,8 +11,10 @@ import { Song } from '../core/models/song.model';
 })
 export class SearchResultsComponent {
   @Input() results: Song[] = [];
+  @Input() loading = false;
 
   @Output() add = new EventEmitter<Song>();
+  @Output() loadMore = new EventEmitter<void>();
 
   onAdd(song: Song) {
     this.add.emit(song);

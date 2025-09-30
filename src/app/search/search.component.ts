@@ -32,6 +32,7 @@ export class SearchComponent implements OnDestroy {
   // UI state
   query = '';
   loading = false;
+  offset = 0;
   lastAddedSongId: string | null = null;
   completions: string[] = [];
   highlightedIndex = -1;
@@ -75,6 +76,7 @@ export class SearchComponent implements OnDestroy {
     }
 
     this.loading = true;
+    this.offset = 0; // Reset offset for new search
 
     if (this.youtubeService.isYoutubeUrl(query)) {
       this.youtubeService.getSongInfoFromUrl(query).subscribe(songInfo => {
@@ -123,6 +125,24 @@ export class SearchComponent implements OnDestroy {
         }
       });
     }
+  }
+
+  loadMore() {
+    const query = this.query.trim();
+    if (!query) {
+      return;
+    }
+    this.loading = true;
+    this.offset += 10;
+    this.songService.getSongs(query, this.offset).subscribe({
+        next: () => {
+            this.loading = false;
+        },
+        error: () => {
+            this.loading = false;
+            this.notifications.error('Failed to load more results.');
+        }
+    });
   }
 
   handleAdd(song: Song) {

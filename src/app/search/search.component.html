@@ -80,7 +80,7 @@
 
     <!-- Search Results -->
     <div class="w-full max-w-lg mt-4">
-      <app-search-results [results]="(songService.searchResults$ | async) || []" (add)="handleAdd($event)"></app-search-results>
+      <app-search-results [results]="(songService.searchResults$ | async) || []" (add)="handleAdd($event)" (loadMore)="loadMore()" [loading]="loading"></app-search-results>
     </div>
 
     <div class="w-full max-w-lg mt-8">
