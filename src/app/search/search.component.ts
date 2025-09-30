@@ -11,12 +11,13 @@ import { SongService } from '../core/services/song.service';
 import { QueueService } from '../core/services/queue.service';
 import { SpotifyService } from '../core/services/spotify.service';
 import { YoutubeService } from '../core/services/youtube.service';
+import { TranslatePipe } from '@ngx-translate/core';
 // import { AmazonService } from '../core/services/amazon.service';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchResultsComponent, QueueComponent],
+  imports: [CommonModule, FormsModule, SearchResultsComponent, QueueComponent, TranslatePipe],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })

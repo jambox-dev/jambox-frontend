@@ -24,7 +24,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/assets/i18n"
             ],
             "styles": [
               "src/styles.css"
