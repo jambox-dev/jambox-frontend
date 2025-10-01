@@ -1,20 +1,22 @@
-<div class="flex flex-col min-h-screen" [class.dark]="isDarkMode()">
+<div class="min-h-screen" [class.dark]="isDarkMode()">
   <!-- Header -->
-  <header class="w-full bg-jambox-dark text-white">
-    <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+  <header class="app-header">
+    <nav class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <!-- Logo -->
       <div class="text-2xl font-bold flex items-center">
         <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 6l12-3"></path></svg>
         <a routerLink="/">Jambox</a>
       </div>
-      <div class="flex items-center">
-        <a *ngIf="isAdminRoute()" [routerLink]="isAdminRoute() ? '/' : '/admin'" class="px-4 py-2 rounded hover:bg-jambox-purple transition-colors">
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-4">
+        <a *ngIf="isAdminRoute()" [routerLink]="isAdminRoute() ? '/' : '/admin'" class="nav-link">
           {{ isAdminRoute() ? ('LAYOUT.USER_VIEW' | translate) : ('LAYOUT.ADMIN_DASHBOARD' | translate) }}
         </a>
-
-        <button id="theme-toggle" data-dropdown-toggle="theme-dropdown" class="p-2 rounded-full hover:bg-jambox-purple transition-colors ml-4" type="button">
+        <button id="theme-toggle" data-dropdown-toggle="theme-dropdown" class="nav-button" type="button">
           <span class="sr-only">{{ 'LAYOUT.OPEN_THEME_MENU' | translate }}</span>
           <svg *ngIf="themeService.theme() === 'light'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-          <svg *ngIf="themeService.theme() === 'dark'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg *ngIf="themeService.theme() === 'dark'" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
           <svg *ngIf="themeService.theme() === 'system'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
         </button>
         <!-- Dropdown menu -->
@@ -32,11 +34,36 @@
             </ul>
         </div>
       </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button (click)="mobileMenuOpen = !mobileMenuOpen" class="nav-button">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
+      </div>
     </nav>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="mobileMenuOpen" class="md:hidden mobile-menu">
+      <a *ngIf="isAdminRoute()" [routerLink]="isAdminRoute() ? '/' : '/admin'" class="mobile-nav-link">
+        {{ isAdminRoute() ? ('LAYOUT.USER_VIEW' | translate) : ('LAYOUT.ADMIN_DASHBOARD' | translate) }}
+      </a>
+      <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex items-center px-5">
+          <span class="text-base font-medium text-gray-800 dark:text-gray-200">Theme</span>
+        </div>
+        <div class="mt-3 px-2 space-y-1">
+          <a (click)="setTheme('light')" href="#" class="mobile-nav-link">Light</a>
+          <a (click)="setTheme('dark')" href="#" class="mobile-nav-link">Dark</a>
+          <a (click)="setTheme('system')" href="#" class="mobile-nav-link">System</a>
+        </div>
+      </div>
+    </div>
   </header>
 
   <!-- Main Content -->
-  <main class="flex-grow container mx-auto px-6 py-8">
+  <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
     <router-outlet></router-outlet>
     <app-notification-container></app-notification-container>
   </main>

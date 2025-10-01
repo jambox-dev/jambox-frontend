@@ -16,6 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class LayoutComponent implements AfterViewInit {
   private _isAdminRoute = false;
+  public mobileMenuOpen = false;
   
   isDarkMode = computed(() => {
     const theme = this.themeService.theme();

@@ -21,11 +21,9 @@
     <div>
       <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Pending Suggestions</h2>
       <div *ngIf="pending$ | async as pending" class="space-y-4">
-        <div *ngFor="let song of pending" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-between">
+        <div *ngFor="let song of pending" class="song-card">
           <div class="flex items-center">
-            <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-full mr-4">
-              <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 6l12-3"></path></svg>
-            </div>
+            <img [src]="song.thumbnailUrl" alt="Album cover for {{song.title}}" class="w-16 h-16 rounded-lg mr-4">
             <div>
               <p class="font-semibold text-gray-800 dark:text-white">{{song.title}}</p>
               <p class="text-sm text-gray-500 dark:text-gray-400">{{song.artist}}</p>
@@ -50,7 +48,7 @@
     <div>
       <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Spotify Queue</h2>
       <div *ngIf="queue$ | async as queue" class="space-y-4">
-        <div *ngFor="let song of queue; let i = index" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-between">
+        <div *ngFor="let song of queue; let i = index" class="song-card">
           <div class="flex items-center">
             <div class="text-lg font-bold text-gray-400 dark:text-gray-500 mr-4">
               <span *ngIf="i === 0; else showAdminNumber">{{ 'Now Playing' }}</span>

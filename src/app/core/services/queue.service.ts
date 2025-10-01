@@ -24,7 +24,7 @@ export class QueueService {
   constructor(private http: HttpClient) { }
 
   addToQueue(request: QueueAddRequest): Observable<Song> {
-    return this.http.post<Song>(this.apiUrl, request);
+    return this.http.post<Song>(this.apiUrl, request, { withCredentials: true });
   }
 
   getQueue(): Observable<Song[]> {

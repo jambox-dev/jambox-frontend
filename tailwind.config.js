@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+      },
       colors: {
         'jambox-dark': '#1C2039',
         'jambox-purple': '#4F46E5', // Using indigo-600 as a replacement for now

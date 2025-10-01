@@ -22,11 +22,10 @@
     </p>
 
     <!-- Search Input -->
-    <div class="w-full max-w-lg">
-      <div class="relative">
-        <form (ngSubmit)="performSearch()">
-          <label for="search-input" class="sr-only">{{ 'SEARCH.ENTER_SONG_NAME_OR_SPOTIFY_URL' | translate }}</label>
-          <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+    <div class="relative w-full max-w-lg">
+      <form (ngSubmit)="performSearch()">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none z-10">
             <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           </div>
           <input
@@ -37,11 +36,11 @@
             (ngModelChange)="onQueryChange($event)"
             (blur)="performSearch()"
             (keydown)="onKeydown($event)"
-            class="w-full pl-12 pr-12 py-4 bg-gray-100 dark:bg-jambox-dark border border-gray-300 dark:border-jambox-purple/30 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-jambox-purple focus:border-jambox-purple"
+            class="search-input"
             [placeholder]="'SEARCH.PLACEHOLDER' | translate"
             autocomplete="off"
           />
-          <div class="absolute inset-y-0 right-0 flex items-center">
+          <div class="absolute inset-y-0 right-0 flex items-center z-10">
             <button
               *ngIf="query.trim()"
               type="button"
@@ -62,20 +61,26 @@
               </svg>
             </button>
           </div>
-        </form>
-        <div *ngIf="completions.length > 0 && query.trim()" (mousedown)="$event.preventDefault()" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg dark:bg-jambox-dark">
-          <ul class="py-1">
-            <li *ngFor="let completion of completions; let i = index"
-                (click)="query = completion; performSearch()"
-                [class.bg-gray-100]="i === highlightedIndex"
-                [class.dark:bg-jambox-dark-light]="i === highlightedIndex"
-                [class.dark:text-gray-800]="i === highlightedIndex"
-                class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-jambox-dark-light cursor-pointer">
-              {{ completion }}
-            </li>
-          </ul>
+            <!-- fix this being to wide -->
+          <div *ngIf="completions.length > 0 && query.trim()" (mousedown)="$event.preventDefault()"
+               class="absolute left-0 right-0 top-full z-10 mt-1 box-border rounded-md shadow-lg backdrop-filter backdrop-blur-lg bg-white bg-opacity-20 dark:bg-jambox-dark dark:bg-opacity-20 border border-gray-200 dark:border-gray-700 max-h-80 overflow-auto"
+               role="listbox">
+            <ul class="py-1">
+              <li *ngFor="let completion of completions; let i = index"
+                  (click)="query = completion; performSearch()"
+                  [class.bg-gray-100]="i === highlightedIndex"
+                  [class.dark:bg-gray-700]="i === highlightedIndex"
+                  [class.text-gray-900]="i === highlightedIndex"
+                  [class.dark:text-white]="i === highlightedIndex"
+                  class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                  role="option"
+                  [attr.aria-selected]="i === highlightedIndex">
+                {{ completion }}
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
 
     <!-- Search Results -->
