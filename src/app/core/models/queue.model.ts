@@ -21,4 +21,5 @@ export interface ApproveRequest {
 export interface QueueSettings {
   id: 'SINGLETON';
   needsApproval: boolean;
+  blacklistEnabled: boolean;
 }

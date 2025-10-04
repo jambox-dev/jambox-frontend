@@ -52,7 +52,8 @@ export class QueueService {
           id: item.id,
           title: item.song.songName,
           artist: item.song.author,
-          thumbnailUrl: item.song.songCover
+          thumbnailUrl: item.song.songCover,
+          songUrl: item.song.songUrl
         } as Song))
       )
     );
@@ -70,7 +71,14 @@ export class QueueService {
     return this.http.get<QueueSettings>(`${this.apiUrl}/settings`, { withCredentials: true });
   }
 
-  updateSettings(needsApproval: boolean): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/settings?needs-approval=${needsApproval}`, {}, { withCredentials: true });
+  updateSettings(settings: Partial<QueueSettings>): Observable<void> {
+    const params: any = {};
+    if (settings.needsApproval !== undefined) {
+      params['needs-approval'] = settings.needsApproval;
+    }
+    if (settings.blacklistEnabled !== undefined) {
+      params['blacklist-enabled'] = settings.blacklistEnabled;
+    }
+    return this.http.post<void>(`${this.apiUrl}/settings`, {}, { params, withCredentials: true });
   }
 }

@@ -7,4 +7,5 @@ export interface Song {
   durationSec?: number;
   duration?: string;
   approved?: boolean;
+  songUrl?: string;
 }

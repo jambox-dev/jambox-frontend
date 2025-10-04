@@ -1,17 +1,19 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { CommonModule, NgFor } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Song } from '../../core/models/song.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { map, Observable, Subscription, switchMap, take } from 'rxjs';
 import { QueueService } from '../../core/services/queue.service';
 import { SpotifyService } from '../../core/services/spotify.service';
+import { BlacklistService } from '../../core/services/blacklist.service';
 import { ApprovalQueue } from '../../core/models/queue.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NgFor],
+  imports: [CommonModule, NgFor, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -20,6 +22,7 @@ export class DashboardComponent implements OnInit {
   private spotifyService = inject(SpotifyService);
   private notifications = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef);
+  private blacklistService = inject(BlacklistService);
 
   // Live region announcement for accessibility
   ariaAnnouncement = '';
@@ -43,7 +46,7 @@ export class DashboardComponent implements OnInit {
   toggleAutoplay() {
     this.autoplay$.pipe(
       take(1),
-      switchMap(autoplay => this.queueService.updateSettings(autoplay))
+      switchMap(autoplay => this.queueService.updateSettings({ needsApproval: !autoplay }))
     ).subscribe(() => {
       this.autoplay$.pipe(take(1)).subscribe(autoplay => {
         const msg = autoplay
@@ -68,6 +71,15 @@ export class DashboardComponent implements OnInit {
       this.notifications.info(`'${song.title}' has been declined.`);
       this.ngOnInit(); // Refresh lists
     });
+  }
+
+  blacklist(song: Song) {
+    if (song.songUrl) {
+      this.blacklistService.blacklistSong(song.songUrl).subscribe(() => {
+        this.notifications.success(`'${song.title}' has been blacklisted.`);
+        this.decline(song);
+      });
+    }
   }
 
   remove(song: Song) {

@@ -1,0 +1,38 @@
+<div class="blacklist-container">
+  <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Blacklist</h2>
+
+  <div class="flex items-center gap-4 mb-4">
+    <label for="blacklist-toggle" class="relative inline-flex items-center cursor-pointer">
+      <input type="checkbox" id="blacklist-toggle" class="sr-only peer" [checked]="(blacklistEnabled$ | async) ?? false" (change)="toggleBlacklist($event)">
+      <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-jambox-purple/50 dark:peer-focus:ring-jambox-purple dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-jambox-purple"></div>
+      <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Enable Blacklist</span>
+    </label>
+  </div>
+
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Add Song to Blacklist</h3>
+    <div class="flex gap-2">
+      <input type="text" [(ngModel)]="newSongUrl" placeholder="Enter song URL" class="input flex-grow">
+      <button (click)="blacklistSong()" class="btn btn-primary">Add</button>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Blacklisted Songs</h3>
+    <div *ngIf="blacklist$ | async as blacklist" class="space-y-4">
+      <div *ngFor="let song of blacklist" class="song-card">
+        <div class="flex items-center">
+          <img [src]="song.thumbnailUrl" alt="Album cover for {{song.title}}" class="w-16 h-16 rounded-lg mr-4">
+          <div>
+            <p class="font-semibold text-gray-800 dark:text-white">{{song.title}}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{song.artist}}</p>
+          </div>
+        </div>
+        <button (click)="unblacklistSong(song)" class="btn btn-danger">Remove</button>
+      </div>
+      <div *ngIf="blacklist.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+        No songs have been blacklisted.
+      </div>
+    </div>
+  </div>
+</div>
