@@ -151,8 +151,12 @@ export class SearchComponent implements OnDestroy {
       next: () => {
         this.notifications.success('Song added to queue.');
       },
-      error: () => {
-        this.notifications.error('Could not add song.');
+      error: (err) => {
+        if (err.error === 'Song is in blacklist') {
+          this.notifications.info('This song is in the blacklist.');
+        } else {
+          this.notifications.error('Could not add song.');
+        }
       }
     });
   }
