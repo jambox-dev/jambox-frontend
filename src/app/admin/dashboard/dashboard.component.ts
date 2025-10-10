@@ -4,7 +4,7 @@ import { CommonModule, NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Song } from '../../core/models/song.model';
 import { NotificationService } from '../../core/services/notification.service';
-import { map, Observable, Subscription, switchMap, take } from 'rxjs';
+import { map, Observable, Subscription, switchMap, take, firstValueFrom, startWith, Subject } from 'rxjs';
 import { QueueService } from '../../core/services/queue.service';
 import { SpotifyService } from '../../core/services/spotify.service';
 import { BlacklistService } from '../../core/services/blacklist.service';
@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
 
   // Live region announcement for accessibility
   ariaAnnouncement = '';
+  private refresh$ = new Subject<void>();
 
   public pending$!: Observable<Song[]>;
   public queue$!: Observable<Song[]>;
@@ -34,51 +35,55 @@ export class DashboardComponent implements OnInit {
   public isSpotifyLoggedIn$!: Observable<boolean>;
 
   ngOnInit(): void {
-    this.autoplay$ = this.queueService.getSettings().pipe(
-      map(settings => !settings.needsApproval)
-    );
-    this.pending$ = this.queueService.getQueueNeedsApproval();
-    this.queue$ = this.queueService.getQueue();
     this.isSpotifyLoggedIn$ = this.spotifyService.isLoggedIn();
 
+    const refresh$ = this.refresh$.pipe(startWith(undefined));
+
+    this.autoplay$ = refresh$.pipe(
+      switchMap(() => this.queueService.getSettings()),
+      map((settings: { needsApproval: any; }) => !settings.needsApproval)
+    );
+
+    this.pending$ = refresh$.pipe(
+      switchMap(() => this.queueService.getQueueNeedsApproval())
+    );
+
+    this.queue$ = refresh$.pipe(
+      switchMap(() => this.queueService.getQueue())
+    );
+
   }
 
-  toggleAutoplay() {
-    this.autoplay$.pipe(
-      take(1),
-      switchMap(autoplay => this.queueService.updateSettings({ needsApproval: !autoplay }))
-    ).subscribe(() => {
-      this.autoplay$.pipe(take(1)).subscribe(autoplay => {
-        const msg = autoplay
-          ? 'Autoplay enabled: songs auto-accepted.'
-          : 'Autoplay disabled: review required.';
-        this.notifications.info(msg);
-        this.ariaAnnouncement = msg;
-        this.cdr.markForCheck();
-      });
-    });
+  async toggleAutoplay() {
+    const currentAutoplay = await firstValueFrom(this.autoplay$);
+    await firstValueFrom(this.queueService.updateSettings({ needsApproval: !currentAutoplay }));
+    const newAutoplay = await firstValueFrom(this.autoplay$);
+    const msg = newAutoplay
+      ? 'Autoplay enabled: songs auto-accepted.'
+      : 'Autoplay disabled: review required.';
+    this.notifications.info(msg);
+    this.ariaAnnouncement = msg;
+    this.cdr.markForCheck();
+    this.refresh$.next();
   }
 
-  accept(song: Song) {
-    this.queueService.approveSong({ queue_id: song.id, approved: true }).subscribe(() => {
-      this.notifications.success(`'${song.title}' has been added to the queue.`);
-      this.ngOnInit(); // Refresh lists
-    });
+  async accept(song: Song) {
+    await firstValueFrom(this.queueService.approveSong({ queue_id: song.id, approved: true }));
+    this.notifications.success(`'${song.title}' has been added to the queue.`);
+    this.refresh$.next();
   }
 
-  decline(song: Song) {
-    this.queueService.approveSong({ queue_id: song.id, approved: false }).subscribe(() => {
-      this.notifications.info(`'${song.title}' has been declined.`);
-      this.ngOnInit(); // Refresh lists
-    });
+  async decline(song: Song) {
+    await firstValueFrom(this.queueService.approveSong({ queue_id: song.id, approved: false }));
+    this.notifications.info(`'${song.title}' has been declined.`);
+    this.refresh$.next();
   }
 
-  blacklist(song: Song) {
+  async blacklist(song: Song) {
     if (song.songUrl) {
-      this.blacklistService.blacklistSong(song.songUrl).subscribe(() => {
-        this.notifications.success(`'${song.title}' has been blacklisted.`);
-        this.decline(song);
-      });
+      await firstValueFrom(this.blacklistService.blacklistSong(song.songUrl));
+      this.notifications.success(`'${song.title}' has been blacklisted.`);
+      await this.decline(song);
     }
   }
 
