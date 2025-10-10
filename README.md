@@ -1,42 +1,50 @@
-# JamboxFront
+# Jambox - Collaborative Music Queue
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+[![Angular CI](https://github.com/your-org/jambox-front/actions/workflows/angular-ci.yml/badge.svg)](https://github.com/your-org/jambox-front/actions/workflows/angular-ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Development server
+**Tags/Labels:** `angular`, `typescript`, `tailwind-css`, `music`, `queue`, `spotify`, `youtube`, `collaboration`, `pwa`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Jambox is a collaborative, real-time music queueing application that allows multiple users to add and vote on songs for a shared listening experience. It's perfect for parties, offices, or any social gathering where music is shared. Users can easily add songs from YouTube and Spotify, and the queue is updated in real-time for everyone.
 
-## Code scaffolding
+## Key Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+*   **Collaborative Queue:** Users can add songs from YouTube and Spotify to a shared, real-time playlist.
+*   **QR Code Access:** Easily invite guests to join the queue by scanning a QR code—no app download required.
+*   **Admin Dashboard:** A password-protected admin panel to manage the queue and application settings.
+*   **Song Blacklist:** Admins can blacklist specific songs to prevent them from being added to the queue.
+*   **Multi-language Support:** The interface is available in multiple languages thanks to `ngx-translate`.
+*   **Responsive Design:** A clean, modern UI built with Tailwind CSS that works on any device.
 
-## Build
+## Tech Stack
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+*   **Framework:** [Angular](https://angular.io/)
+*   **Language:** [TypeScript](https://www.typescriptlang.org/)
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+*   **Real-time Updates:** [RxJS](https://rxjs.dev/)
+*   **Internationalization:** [ngx-translate](https://github.com/ngx-translate/core)
+*   **QR Code Generation:** [qrcode](https://github.com/soldair/node-qrcode)
 
-## Docker
+## Future Development
 
-To build and run this project with Docker, follow these steps:
+We have many ideas for improving Jambox! Here are a few possibilities:
 
-1. **Build the Docker image:**
-   ```bash
-   docker build -t jambox-front .
-   ```
+*   **User Voting System:** Allow users to upvote or downvote songs in the queue to influence playback order.
+*   **More Music Sources:** Integrate with other music streaming services like Apple Music or SoundCloud.
+*   **Customizable Themes:** Let users personalize the look and feel of the application.
+*   **Progressive Web App (PWA):** Add offline capabilities and make the app installable on mobile devices.
 
-2. **Run the Docker container:**
-   ```bash
-   docker run -p 4200:4200 jambox-front
-   ```
-   Navigate to `http://localhost:4200/` to view the application.
+## Contributing
 
-## Running unit tests
+We welcome contributions from the community! If you'd like to contribute, please follow these steps:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1.  Fork the repository.
+2.  Create a new branch for your feature or bug fix (`git checkout -b feature/your-feature-name`).
+3.  Make your changes and commit them with clear, descriptive messages.
+4.  Push your changes to your fork.
+5.  Open a pull request to the `main` branch of this repository.
 
-## Running end-to-end tests
+Please ensure your code follows the existing style and that all tests pass before submitting a pull request.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+*This README was generated with the help of Kilo Code.*
