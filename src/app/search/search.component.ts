@@ -5,7 +5,23 @@ import { SearchResultsComponent } from '../search-results/search-results.compone
 import { QueueComponent } from '../queue/queue.component';
 import { Song } from '../core/models/song.model';
 import { NotificationService } from '../core/services/notification.service';
-import { Subject, Subscription, debounceTime, distinctUntilChanged, map, switchMap, Observable } from 'rxjs';
+import {
+  Subject,
+  Subscription,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  Observable,
+  firstValueFrom,
+  shareReplay,
+  startWith,
+  catchError,
+  of,
+  merge,
+  filter,
+  tap,
+} from 'rxjs';
 import { CompletionService } from '../core/services/completion.service';
 import { SongService } from '../core/services/song.service';
 import { QueueService } from '../core/services/queue.service';
@@ -32,7 +48,7 @@ export class SearchComponent implements OnDestroy {
 
   // UI state
   query = '';
-  loading = false;
+  loading$: Observable<boolean>;
   offset = 0;
   lastAddedSongId: string | null = null;
   completions: string[] = [];
@@ -41,23 +57,78 @@ export class SearchComponent implements OnDestroy {
 
   // Debounce stream
   private queryInput$ = new Subject<string>();
+  private search$ = new Subject<void>();
+  private loadMore$ = new Subject<void>();
   private sub: Subscription;
 
   constructor() {
     this.isSpotifyLoggedIn$ = this.spotifyService.isLoggedIn();
 
-    // Debounce search input: trim + ignore consecutive duplicates + 300ms delay
+    // Debounce search input for completions
     this.sub = this.queryInput$
       .pipe(
-        map(v => v.replace(/\s+/g, ' ')), // collapse inner whitespace
+        map((v) => v.replace(/\s+/g, ' ')), // collapse inner whitespace
         debounceTime(300),
         distinctUntilChanged(),
-        switchMap(query => this.completionService.getCompletion(query))
+        switchMap((query) => this.completionService.getCompletion(query)),
       )
-      .subscribe(completions => {
+      .subscribe((completions) => {
         this.completions = completions;
         this.highlightedIndex = -1;
       });
+
+    const searchAction$ = this.search$.pipe(map(() => ({ query: this.query.trim(), offset: 0, isSearch: true })));
+
+    const loadMoreAction$ = this.loadMore$.pipe(
+      map(() => ({ query: this.query.trim(), offset: this.offset + 10, isSearch: false })),
+    );
+
+    const action$ = merge(searchAction$, loadMoreAction$).pipe(
+      filter((action) => !!action.query),
+      tap((action) => {
+        this.offset = action.offset;
+        if (action.isSearch) {
+          this.clearCompletions();
+        }
+      }),
+      switchMap((action) => {
+        const getSongs = (searchQuery: string, offset = 0) =>
+          this.songService.getSongs(searchQuery, offset).pipe(
+            catchError(() => {
+              this.notifications.error('Search failed.');
+              return of(null);
+            }),
+          );
+
+        if (this.youtubeService.isYoutubeUrl(action.query)) {
+          return this.youtubeService.getSongInfoFromUrl(action.query).pipe(
+            switchMap((songInfo) => {
+              if (songInfo) {
+                const searchQuery = `${songInfo.artist} - ${songInfo.songTitle}`;
+                return getSongs(searchQuery);
+              }
+              this.notifications.error('Could not parse YouTube URL.');
+              return of(null);
+            }),
+            catchError(() => {
+              this.notifications.error('Could not parse YouTube URL.');
+              return of(null);
+            }),
+          );
+        } else {
+          return getSongs(action.query, action.offset);
+        }
+      }),
+      shareReplay(1),
+    );
+
+    this.loading$ = merge(searchAction$.pipe(map(() => true)), loadMoreAction$.pipe(map(() => true)), action$.pipe(map(() => false))).pipe(
+      startWith(false),
+      distinctUntilChanged(),
+      shareReplay(1),
+    );
+
+    this.sub.add(action$.subscribe());
   }
 
   onQueryChange(value: string) {
@@ -70,95 +141,24 @@ export class SearchComponent implements OnDestroy {
   }
 
   performSearch() {
-    this.clearCompletions();
-    const query = this.query.trim();
-    if (!query) {
-      return;
-    }
-
-    this.loading = true;
-    this.offset = 0; // Reset offset for new search
-
-    if (this.youtubeService.isYoutubeUrl(query)) {
-      this.youtubeService.getSongInfoFromUrl(query).subscribe(songInfo => {
-        if (songInfo) {
-          const searchQuery = `${songInfo.artist} - ${songInfo.songTitle}`;
-          this.songService.getSongs(searchQuery).subscribe({
-            next: () => {
-              this.loading = false;
-            },
-            error: () => {
-              this.loading = false;
-              this.notifications.error('Search failed.');
-            }
-          });
-        } else {
-          this.loading = false;
-          this.notifications.error('Could not parse YouTube URL.');
-        }
-      });
-    // } else if (this.amazonService.isAmazonMusicUrl(query)) {
-    //   this.amazonService.getSongInfoFromUrl(query).subscribe(songInfo => {
-    //     if (songInfo) {
-    //       const searchQuery = `${songInfo.artist} - ${songInfo.songTitle}`;
-    //       this.songService.getSongs(searchQuery).subscribe({
-    //         next: () => {
-    //           this.loading = false;
-    //         },
-    //         error: () => {
-    //           this.loading = false;
-    //           this.notifications.error('Search failed.');
-    //         }
-    //       });
-    //     } else {
-    //       this.loading = false;
-    //       this.notifications.error('Could not parse Amazon Music URL.');
-    //     }
-    //   });
-    } else {
-      this.songService.getSongs(query).subscribe({
-        next: () => {
-          this.loading = false;
-        },
-        error: () => {
-          this.loading = false;
-          this.notifications.error('Search failed.');
-        }
-      });
-    }
+    this.search$.next();
   }
 
   loadMore() {
-    const query = this.query.trim();
-    if (!query) {
-      return;
-    }
-    this.loading = true;
-    this.offset += 10;
-    this.songService.getSongs(query, this.offset).subscribe({
-        next: () => {
-            this.loading = false;
-        },
-        error: () => {
-            this.loading = false;
-            this.notifications.error('Failed to load more results.');
-        }
-    });
+    this.loadMore$.next();
   }
 
-  handleAdd(song: Song) {
-    this.queueService.addToQueue({ song_url: song.id }).subscribe({
-      next: () => {
-        this.notifications.success('Song added to queue.');
-      },
-      error: (err) => {
-        if (err.error === 'Song is in blacklist') {
-          this.notifications.info('This song is in the blacklist.');
-        } else {
-          this.notifications.error('Could not add song.');
-        }
+  async handleAdd(song: Song) {
+    try {
+      await firstValueFrom(this.queueService.addToQueue({ song_url: song.id }));
+      this.notifications.success('Song added to queue.');
+    } catch (err: any) {
+      if (err.error === 'Song is in blacklist') {
+        this.notifications.info('This song is in the blacklist.');
+      } else {
+        this.notifications.error('Could not add song.');
       }
-    });
+    }
   }
 
   clearQuery() {
