@@ -1,6 +1,6 @@
 # Jambox - Collaborative Music Queue
 
-[![Angular CI](https://github.com/your-org/jambox-front/actions/workflows/angular-ci.yml/badge.svg)](https://github.com/your-org/jambox-front/actions/workflows/angular-ci.yml)
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 **Tags/Labels:** `angular`, `typescript`, `tailwind-css`, `music`, `queue`, `spotify`, `youtube`, `collaboration`, `pwa`
