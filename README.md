@@ -25,6 +25,10 @@ Jambox is a collaborative, real-time music queueing application that allows mult
 *   **Internationalization:** [ngx-translate](https://github.com/ngx-translate/core)
 *   **QR Code Generation:** [qrcode](https://github.com/soldair/node-qrcode)
 
+## Development
+
+For a detailed guide on local setup, architecture, and coding standards, please see the [Developer Guide](docs/DEVELOPER_GUIDE.md).
+
 ## Future Development
 
 We have many ideas for improving Jambox! Here are a few possibilities:
