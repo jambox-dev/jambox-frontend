@@ -2,9 +2,25 @@ import { Routes } from '@angular/router';
 import { SearchComponent } from './search/search.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { QrCodeComponent } from './qr-code/qr-code.component';
+import { LandingComponent } from './landing/landing.component';
+import { MainDomainGuard } from './core/guards/main-domain.guard';
+import { TenantDomainGuard } from './core/guards/tenant-domain.guard';
 
 export const routes: Routes = [
-  { path: '', component: SearchComponent },
+  // Main Domain Routes
+  {
+    path: '',
+    component: LandingComponent,
+    canMatch: [MainDomainGuard]
+  },
+  // Tenant Domain Routes
+  {
+    path: '',
+    component: SearchComponent,
+    canMatch: [TenantDomainGuard]
+  },
+
+  // Shared/Common Routes (or specific to one, can be guarded if needed)
   { path: 'qr-code', component: QrCodeComponent },
   {
     path: 'admin',
