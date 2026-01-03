@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Song } from '../models/song.model';
 import { ApprovalQueue, ApproveRequest, QueueAddRequest, QueueSettings } from '../models/queue.model';
 import { environment } from '../../../environments/environment';
@@ -21,10 +21,16 @@ export class QueueService {
 
   private apiUrl = `${environment.apiUrl}/queue`;
 
+  /** Emits whenever the queue should be refreshed (e.g., after adding a song) */
+  private refreshTrigger$ = new Subject<void>();
+  public queueRefresh$ = this.refreshTrigger$.asObservable();
+
   constructor(private http: HttpClient) { }
 
   addToQueue(request: QueueAddRequest): Observable<Song> {
-    return this.http.post<Song>(this.apiUrl, request, { withCredentials: true });
+    return this.http.post<Song>(this.apiUrl, request, { withCredentials: true }).pipe(
+      tap(() => this.refreshTrigger$.next())
+    );
   }
 
   getQueue(): Observable<Song[]> {
@@ -42,7 +48,7 @@ export class QueueService {
 
 
   searchQueue(songName: string): Observable<Song[]> {
-    return this.http.get<Song[]>(`${this.apiUrl}/search`, { params: { song_name: songName } , withCredentials: true });
+    return this.http.get<Song[]>(`${this.apiUrl}/search`, { params: { song_name: songName }, withCredentials: true });
   }
 
   getQueueNeedsApproval(): Observable<Song[]> {
@@ -60,11 +66,11 @@ export class QueueService {
   }
 
   searchQueueNeedsApproval(songName: string): Observable<ApprovalQueue[]> {
-    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval/search`, { params: { song_name: songName } , withCredentials: true });
+    return this.http.get<ApprovalQueue[]>(`${this.apiUrl}/needs-approval/search`, { params: { song_name: songName }, withCredentials: true });
   }
 
   approveSong(request: ApproveRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/approve`, request , { withCredentials: true });
+    return this.http.post<void>(`${this.apiUrl}/approve`, request, { withCredentials: true });
   }
 
   getSettings(): Observable<QueueSettings> {
