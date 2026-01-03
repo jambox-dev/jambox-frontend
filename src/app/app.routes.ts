@@ -6,11 +6,24 @@ import { LandingComponent } from './landing/landing.component';
 import { MainDomainGuard } from './core/guards/main-domain.guard';
 import { TenantDomainGuard } from './core/guards/tenant-domain.guard';
 
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './admin/login/login.component';
+
 export const routes: Routes = [
   // Main Domain Routes
   {
     path: '',
     component: LandingComponent,
+    canMatch: [MainDomainGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canMatch: [MainDomainGuard]
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
     canMatch: [MainDomainGuard]
   },
   // Tenant Domain Routes
