@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { SearchResultsComponent } from './search-results.component';
 
@@ -8,7 +9,7 @@ describe('SearchResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchResultsComponent]
+      imports: [SearchResultsComponent, TranslateModule.forRoot()]
     })
     .compileComponents();
 

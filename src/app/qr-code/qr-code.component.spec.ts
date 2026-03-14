@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { QrCodeComponent } from './qr-code.component';
 
@@ -8,7 +9,7 @@ describe('QrCodeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [QrCodeComponent]
+      imports: [QrCodeComponent, TranslateModule.forRoot()]
     })
     .compileComponents();
 
